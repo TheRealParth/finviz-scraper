@@ -1,0 +1,4 @@
+{
+  "tickers": ["tsla","arkk"], 
+  "values": ["pe", "peg"]    
+}
