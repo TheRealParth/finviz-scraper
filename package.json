@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "nodemon",
+    "start:timed": "npm run build && time npm run prod",
     "test": "jest",
     "build": "tsc",
     "prod": "node dist/index.js",
