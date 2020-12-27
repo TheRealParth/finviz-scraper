@@ -1,4 +1,4 @@
 {
-  "tickers": ["tsla","arkk"], 
+  "tickers": ["tsla","arkk","aapl","goog"], 
   "values": ["pe", "peg"]    
 }
