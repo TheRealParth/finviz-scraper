@@ -57,6 +57,9 @@ export const getDataForTickers = async tickerList => {
       })
 
       const shortInterest = await page.evaluate(async () => {
+
+
+        
         return document.querySelectorAll('.snapshot-td2')[16].textContent
       })
 
