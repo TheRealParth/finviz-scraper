@@ -19,3 +19,4 @@ temp/
 puppeteer-core-*.tgz
 new-docs/
 dist/
+logs/
