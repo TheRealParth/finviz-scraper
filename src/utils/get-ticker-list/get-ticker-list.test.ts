@@ -3,7 +3,7 @@ import tickerList from '../../config/input-data'
 
 describe('getTickerList', () => {
 
-    it('returns the input data object', () => {
+    it('returns the input data', () => {
 
         expect(getTickerList()).toEqual(tickerList)
 

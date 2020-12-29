@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 
-import { handleRequest } from './handle-request'
+import { handleRequest } from './handle-request/handle-request'
 
 export const getDataForTickers = async tickerList => {
   return new Promise(async resolve => {
