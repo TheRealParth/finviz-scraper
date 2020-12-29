@@ -5615,3 +5615,163 @@
   message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
   level: 'info'
 }
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{ message: 'data for tickers: undefined', level: 'info' }
+{
+  message: 'Input data: {\n  "tickers": [\n    "foo"\n  ],\n  "values": [\n    "bar"\n  ]\n}',
+  level: 'info'
+}

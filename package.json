@@ -5,8 +5,10 @@
   "scripts": {
     "start": "nodemon",
     "start:timed": "npm run build && time npm run prod",
-    "test": "jest --watch --detectOpenHandles --runInBand",
-    "test:cov": "jest --coverage",
+    "test": "npm run jest-no-warnings -- --watch",
+    "test:all": "npm run jest-no-warnings -- --watchAll",
+    "test:cov": "npm run jest-no-warnings -- --coverage ",
+    "jest-no-warnings": "jest --detectOpenHandles --runInBand",
     "build": "tsc",
     "prod": "node dist/index.js",
     "format": "prettier-standard '**/*.ts'"
