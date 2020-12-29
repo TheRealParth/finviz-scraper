@@ -1,4 +1,4 @@
-import { getTickerList } from './utils/get-ticker-list'
+import { getTickerList } from './utils/get-ticker-list/get-ticker-list'
 import { getDataForTickers } from './utils/scrape-data-for-tickers'
 
 import { logger } from './utils/logger'

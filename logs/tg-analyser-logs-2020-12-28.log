@@ -239,3 +239,387 @@
     ']',
   level: 'info'
 }
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{
+  message: 'data for tickers: [\n' +
+    '  {\n' +
+    '    "symbol": "arkk",\n' +
+    '    "companyName": "4 Top Advisor ETF Picks For 2021",\n' +
+    '    "industries": [\n' +
+    '      "Financial",\n' +
+    '      "Exchange Traded Fund",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "-",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "-",\n' +
+    '    "institutional_ownership": "-",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "9,303,341",\n' +
+    '    "volume_3m_avg": "3.30M",\n' +
+    '    "prev_close": "129.80"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "aapl",\n' +
+    '    "companyName": "Apple Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Technology",\n' +
+    '      "Consumer Electronics",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "41.84",\n' +
+    '    "peg": "3.31",\n' +
+    '    "short_interest": "0.56%",\n' +
+    '    "institutional_ownership": "0.07%",\n' +
+    '    "profit_margin": "24.10%",\n' +
+    '    "debt_to_equity": "1.73",\n' +
+    '    "lt_debt_to_equity": "1.52",\n' +
+    '    "volume_prev_day": "123,323,609",\n' +
+    '    "volume_3m_avg": "116.11M",\n' +
+    '    "prev_close": "136.69"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "goog",\n' +
+    '    "companyName": "Alphabet Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Communication Services",\n' +
+    '      "Internet Content & Information",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "34.32",\n' +
+    '    "peg": "2.08",\n' +
+    '    "short_interest": "0.38%",\n' +
+    '    "institutional_ownership": "5.84%",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "1,391,247",\n' +
+    '    "volume_3m_avg": "1.67M",\n' +
+    '    "prev_close": "1776.09"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "tsla",\n' +
+    '    "companyName": "Tesla, Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Consumer Cyclical",\n' +
+    '      "Auto Manufacturers",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "1314.24",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "5.97%",\n' +
+    '    "institutional_ownership": "0.10%",\n' +
+    '    "profit_margin": "0.00%",\n' +
+    '    "debt_to_equity": "0.86",\n' +
+    '    "lt_debt_to_equity": "0.66",\n' +
+    '    "volume_prev_day": "31,588,249",\n' +
+    '    "volume_3m_avg": "45.02M",\n' +
+    '    "prev_close": "663.69"\n' +
+    '  }\n' +
+    ']',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{
+  message: 'data for tickers: [\n' +
+    '  {\n' +
+    '    "symbol": "arkk",\n' +
+    '    "companyName": "4 Top Advisor ETF Picks For 2021",\n' +
+    '    "industries": [\n' +
+    '      "Financial",\n' +
+    '      "Exchange Traded Fund",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "-",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "-",\n' +
+    '    "institutional_ownership": "-",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "9,303,341",\n' +
+    '    "volume_3m_avg": "3.30M",\n' +
+    '    "prev_close": "129.80"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "tsla",\n' +
+    '    "companyName": "Tesla, Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Consumer Cyclical",\n' +
+    '      "Auto Manufacturers",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "1314.24",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "5.97%",\n' +
+    '    "institutional_ownership": "0.10%",\n' +
+    '    "profit_margin": "0.00%",\n' +
+    '    "debt_to_equity": "0.86",\n' +
+    '    "lt_debt_to_equity": "0.66",\n' +
+    '    "volume_prev_day": "31,588,249",\n' +
+    '    "volume_3m_avg": "45.02M",\n' +
+    '    "prev_close": "663.69"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "aapl",\n' +
+    '    "companyName": "Apple Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Technology",\n' +
+    '      "Consumer Electronics",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "41.84",\n' +
+    '    "peg": "3.31",\n' +
+    '    "short_interest": "0.56%",\n' +
+    '    "institutional_ownership": "0.07%",\n' +
+    '    "profit_margin": "24.10%",\n' +
+    '    "debt_to_equity": "1.73",\n' +
+    '    "lt_debt_to_equity": "1.52",\n' +
+    '    "volume_prev_day": "123,323,609",\n' +
+    '    "volume_3m_avg": "116.11M",\n' +
+    '    "prev_close": "136.69"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "goog",\n' +
+    '    "companyName": "Alphabet Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Communication Services",\n' +
+    '      "Internet Content & Information",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "34.32",\n' +
+    '    "peg": "2.08",\n' +
+    '    "short_interest": "0.38%",\n' +
+    '    "institutional_ownership": "5.84%",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "1,391,247",\n' +
+    '    "volume_3m_avg": "1.67M",\n' +
+    '    "prev_close": "1776.09"\n' +
+    '  }\n' +
+    ']',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{
+  message: 'data for tickers: [\n' +
+    '  {\n' +
+    '    "symbol": "arkk",\n' +
+    '    "companyName": "4 Top Advisor ETF Picks For 2021",\n' +
+    '    "industries": [\n' +
+    '      "Financial",\n' +
+    '      "Exchange Traded Fund",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "-",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "-",\n' +
+    '    "institutional_ownership": "-",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "9,303,341",\n' +
+    '    "volume_3m_avg": "3.30M",\n' +
+    '    "prev_close": "129.80"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "aapl",\n' +
+    '    "companyName": "Apple Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Technology",\n' +
+    '      "Consumer Electronics",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "41.84",\n' +
+    '    "peg": "3.31",\n' +
+    '    "short_interest": "0.56%",\n' +
+    '    "institutional_ownership": "0.07%",\n' +
+    '    "profit_margin": "24.10%",\n' +
+    '    "debt_to_equity": "1.73",\n' +
+    '    "lt_debt_to_equity": "1.52",\n' +
+    '    "volume_prev_day": "123,323,609",\n' +
+    '    "volume_3m_avg": "116.11M",\n' +
+    '    "prev_close": "136.69"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "goog",\n' +
+    '    "companyName": "Alphabet Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Communication Services",\n' +
+    '      "Internet Content & Information",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "34.32",\n' +
+    '    "peg": "2.08",\n' +
+    '    "short_interest": "0.38%",\n' +
+    '    "institutional_ownership": "5.84%",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "1,391,247",\n' +
+    '    "volume_3m_avg": "1.67M",\n' +
+    '    "prev_close": "1776.09"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "tsla",\n' +
+    '    "companyName": "Tesla, Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Consumer Cyclical",\n' +
+    '      "Auto Manufacturers",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "1314.24",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "5.97%",\n' +
+    '    "institutional_ownership": "0.10%",\n' +
+    '    "profit_margin": "0.00%",\n' +
+    '    "debt_to_equity": "0.86",\n' +
+    '    "lt_debt_to_equity": "0.66",\n' +
+    '    "volume_prev_day": "31,588,249",\n' +
+    '    "volume_3m_avg": "45.02M",\n' +
+    '    "prev_close": "663.69"\n' +
+    '  }\n' +
+    ']',
+  level: 'info'
+}
+{
+  message: 'Input data: {\n' +
+    '  "tickers": [\n' +
+    '    "tsla",\n' +
+    '    "arkk",\n' +
+    '    "aapl",\n' +
+    '    "goog"\n' +
+    '  ],\n' +
+    '  "values": [\n' +
+    '    "P/E",\n' +
+    '    "Short Ratio"\n' +
+    '  ]\n' +
+    '}',
+  level: 'info'
+}
+{
+  message: 'data for tickers: [\n' +
+    '  {\n' +
+    '    "symbol": "goog",\n' +
+    '    "companyName": "Alphabet Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Communication Services",\n' +
+    '      "Internet Content & Information",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "34.32",\n' +
+    '    "peg": "2.08",\n' +
+    '    "short_interest": "0.38%",\n' +
+    '    "institutional_ownership": "5.84%",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "1,391,247",\n' +
+    '    "volume_3m_avg": "1.67M",\n' +
+    '    "prev_close": "1776.09"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "aapl",\n' +
+    '    "companyName": "Apple Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Technology",\n' +
+    '      "Consumer Electronics",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "41.84",\n' +
+    '    "peg": "3.31",\n' +
+    '    "short_interest": "0.56%",\n' +
+    '    "institutional_ownership": "0.07%",\n' +
+    '    "profit_margin": "24.10%",\n' +
+    '    "debt_to_equity": "1.73",\n' +
+    '    "lt_debt_to_equity": "1.52",\n' +
+    '    "volume_prev_day": "123,323,609",\n' +
+    '    "volume_3m_avg": "116.11M",\n' +
+    '    "prev_close": "136.69"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "arkk",\n' +
+    '    "companyName": "4 Top Advisor ETF Picks For 2021",\n' +
+    '    "industries": [\n' +
+    '      "Financial",\n' +
+    '      "Exchange Traded Fund",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "-",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "-",\n' +
+    '    "institutional_ownership": "-",\n' +
+    '    "profit_margin": "-",\n' +
+    '    "debt_to_equity": "-",\n' +
+    '    "lt_debt_to_equity": "-",\n' +
+    '    "volume_prev_day": "9,303,341",\n' +
+    '    "volume_3m_avg": "3.30M",\n' +
+    '    "prev_close": "129.80"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "symbol": "tsla",\n' +
+    '    "companyName": "Tesla, Inc.",\n' +
+    '    "industries": [\n' +
+    '      "Consumer Cyclical",\n' +
+    '      "Auto Manufacturers",\n' +
+    '      "USA"\n' +
+    '    ],\n' +
+    '    "pe_ratio": "1314.24",\n' +
+    '    "peg": "-",\n' +
+    '    "short_interest": "5.97%",\n' +
+    '    "institutional_ownership": "0.10%",\n' +
+    '    "profit_margin": "0.00%",\n' +
+    '    "debt_to_equity": "0.86",\n' +
+    '    "lt_debt_to_equity": "0.66",\n' +
+    '    "volume_prev_day": "31,588,249",\n' +
+    '    "volume_3m_avg": "45.02M",\n' +
+    '    "prev_close": "663.69"\n' +
+    '  }\n' +
+    ']',
+  level: 'info'
+}
