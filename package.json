@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon",
     "start:timed": "npm run build && time npm run prod",
-    "test": "jest --watch",
+    "test": "jest --watch --detectOpenHandles --runInBand",
     "test:cov": "jest --coverage",
     "build": "tsc",
     "prod": "node dist/index.js",
