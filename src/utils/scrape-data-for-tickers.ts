@@ -60,8 +60,21 @@ export const getDataForTickers = async tickerList => {
         return document.querySelectorAll('.snapshot-td2')[16].textContent
       })
 
+      const industriesString = await page.evaluate(async () => {
+        return document.querySelectorAll('.fullview-links')[1].textContent
+      })
+      
+      const industries = industriesString.split(' | ')
+      
+      const companyName = await page.evaluate(async () => {
+        return document.querySelectorAll('a[target="_blank"]')[1].textContent
+      })
+
+
       results.push({
         symbol: ticker,
+        companyName,
+        industries,
         pe_ratio: peRatio,
         peg,
         short_interest: shortInterest,
