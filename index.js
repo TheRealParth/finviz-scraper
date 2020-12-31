@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
-
-let args = require('./args.json');
+// 
+// let args = require('./args.json');
 
 (async () => {
   const browser = await puppeteer.launch({ headless: true});
@@ -8,95 +8,39 @@ let args = require('./args.json');
   await page.setViewport({ width: 1200, height: 800 })
   await page.setRequestInterception(true)
   
+  page.on('console', consoleObj => console.log(consoleObj.text()));
   page.on('request', (req) => {
-
-
-    // console.log('>>', request.method(), request.url())
-    // console.log(req.resourceType())
-
     if(req.resourceType() == 'script' || req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image'){
       req.abort();
     } else {
       console.log(req.resourceType())
       req.continue();
     }
+  });
 
+  const finalStockPrices = {};
+  let currLink = `https://finviz.com/screener.ashx?v=120&r=101`;
   
-  // page.on('response', (response) => {
-  //   console.log('<<', response.status(), response.url())
-  // })
-
-  console.log('args is: ', args.tickers)
-  // const tickerCount = args.tickers.length;
-  // const tickers = args.tickers;
-  // const values = args.values;
-  // const html = await page.goto('https://finviz.com/quote.ashx?t=' + tickers.join());
-
-  // const results = [];
-
-  // const funnyFn = async () => {
-
-  //   console.log('fooo')
-
-  //   const tickerData = [];
-
-  //   console.log('tickers 1: ', tickers)
-  //   for (let i = 0; i < tickers.length; i++){
-  //     console.log('tickers 2: ', tickers[i])
-  //     // tickerData["ticker"] = tickers[i];
-  
-  //     // const table = tables[i];
-  //     // if(values.indexOf("pe") > -1) {
-  //     //   const pe = await page.evaluate((function() {
-  //     //     return () => {
-  //     //       console.log('HERE !! ' , i)
-  //     //     return document.querySelectorAll('.snapshot-table2 > .snapshot-td2')[i].textContent
-  //     //     }
-  //     //   }(i)));
-  //     //   tickerData["pe"] = pe.toString();
-  //     // }   
-  
-  //     // if(values.indexOf("peg") > -1) {
-  //     //   const peg = await page.evaluate(() => {
-  //     //     return document.getElementsByClassName('.snapshot-table2 > .snapshot-td2:nth-child('+i+')')[13].textContent
-  //     //   });
-  //     //   tickerData["peg"] = peg.toString();
-  //     // }
-  
-  //     results.push(tickerData);
-  //   }
-    
-  //   return document.querySelectorAll('.snapshot-table2').textContent;
-  // }
-  
-  // const tables = await page.evaluate(funnyFn());
-
-  // console.log('tables ', tables[1]);
-
-
-  // console.log('results ', results);
-
-  if(req.resourceType() == 'script' || req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image'){
-      
-    req.abort();
-  } else {
-    console.log(req.resourceType())
-    req.continue();
-  
+  while(currLink) {
+    await page.goto(currLink, { waitUntil: 'networkidle2' });
+    const {stocksList, nextLink} = await page.evaluate(() => {
+      let nextLink = null;
+      const rows =  Array.from(document.querySelectorAll('tr.table-dark-row-cp'))
+      const pageResult = rows.map(row => {
+        const stockSymbol = row.children[1].children[0].innerText;
+        const stockPrice =  row.children[15].children[0].innerText;
+        return [stockSymbol, stockPrice]
+      })
+      const numLinks = Array.from(document.querySelectorAll('a.tab-link'));
+      const nextButton = numLinks[numLinks.length - 7] || {};
+      if(nextButton.innerText === 'next') { 
+        nextLink = `https://finviz.com/${numLinks[numLinks.length - 7].getAttribute('href')}`
+      } 
+      return { stocksList: pageResult, nextLink }
+    })
+    currLink = nextLink;
+    (stocksList || []).forEach(stockPrice => finalStockPrices[stockPrice[0]] = stockPrice[1])
   }
-})
-// page.on('response', (response) => {
-//   console.log('<<', response.status(), response.url())
-// })
-
-await page.goto('https://finviz.com/quote.ashx?t=tsla');
-
-const textContent = await page.evaluate(() => {
-  return document.querySelectorAll('.snapshot-td2')[1].textContent
-})
-  console.log('textContent ', textContent)
-
-  await page.screenshot({path: 'example.png'});
-
+  console.log(finalStockPrices)
   await browser.close();
 })();
