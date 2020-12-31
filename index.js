@@ -1,6 +1,4 @@
 const puppeteer = require('puppeteer');
-// 
-// let args = require('./args.json');
 
 (async () => {
   const browser = await puppeteer.launch({ headless: true});
@@ -8,12 +6,10 @@ const puppeteer = require('puppeteer');
   await page.setViewport({ width: 1200, height: 800 })
   await page.setRequestInterception(true)
   
-  page.on('console', consoleObj => console.log(consoleObj.text()));
   page.on('request', (req) => {
     if(req.resourceType() == 'script' || req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image'){
       req.abort();
     } else {
-      console.log(req.resourceType())
       req.continue();
     }
   });
@@ -41,6 +37,6 @@ const puppeteer = require('puppeteer');
     currLink = nextLink;
     (stocksList || []).forEach(stockPrice => finalStockPrices[stockPrice[0]] = stockPrice[1])
   }
-  console.log(finalStockPrices)
+  console.log("Scan Complete, total stocks scanned: ", Object.keys(finalStockPrices).length)
   await browser.close();
 })();
