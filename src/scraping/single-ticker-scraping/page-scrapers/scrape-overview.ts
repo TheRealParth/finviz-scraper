@@ -13,7 +13,8 @@ export async function scrapeOverviewData(page, rowIndex) {
 
     // await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
 
-    const overviewRowData = await page.evaluate(async () => {
+    // const overviewRowData = await page.evaluate(async () => {
+    return page.evaluate(async () => {
         
         
         /**
@@ -57,9 +58,9 @@ export async function scrapeOverviewData(page, rowIndex) {
         // return screenerTableContainer
     })
 
-    console.log('got overviewRowData ', overviewRowData)
+    // console.log('got overviewRowData ', overviewRowData)
 
-    return overviewRowData
+    // return overviewRowData
 
 
 }

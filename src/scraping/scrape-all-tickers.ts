@@ -40,6 +40,7 @@ export const scrapeAllTickers = async () => {
         await page.goto(`https://finviz.com/screener.ashx`)
 
         const results = []
+        let symbols = []
 
         const numberOfPages = await page.evaluate(() => {
             const pageNumberLinks = document.querySelectorAll('.screener-pages')
@@ -59,24 +60,15 @@ export const scrapeAllTickers = async () => {
             const symbolsInPage = await getSymbolsForPage(browser, pageNumber);
 
             console.log('symbolsInPage: ', symbolsInPage)
-            
-            for (const symbol of symbolsInPage) {
 
-                console.log('symbol!!', symbol)
-
-                const symbolIndex = symbolsInPage.indexOf(symbol)
-
-                const dataFortTicker = await scrapeDataForSingleTicker(page, symbolIndex)
-
-                results.push(dataFortTicker)
-
-            }
+            symbols = [...symbols, ...symbolsInPage]
 
         }
 
-        console.log('done! ', JSON.stringify(results))
+        // console.log('done! ', JSON.stringify(results))
 
-        resolve(results)
+        // resolve(results)
+        resolve(symbols)
 
     })
 
