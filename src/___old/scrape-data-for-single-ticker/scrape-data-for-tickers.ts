@@ -1,20 +1,20 @@
 const puppeteer = require('puppeteer')
 
-import { handleRequest } from '../../utils/handle-request/handle-request'
+// import { handleRequest } from '../../utils/handle-request/handle-request'
 
 export const getDataForTickers = async tickerList => {
   return new Promise(async resolve => {
-    const browser = await puppeteer.launch({ headless: true })
+    const browser = await puppeteer.launch({ headless: false })
 
     const results = []
 
     tickerList.tickers.forEach(async ticker => {
       const page = await browser.newPage()
 
-      await page.setViewport({ width: 1200, height: 800 })
-      await page.setRequestInterception(true)
+      // await page.setViewport({ width: 1200, height: 800 })
+      // await page.setRequestInterception(true)
 
-      page.on('request', handleRequest)
+      // page.on('request', handleRequest)
 
       await page.goto(`https://finviz.com/quote.ashx?t=${ticker}`)
 

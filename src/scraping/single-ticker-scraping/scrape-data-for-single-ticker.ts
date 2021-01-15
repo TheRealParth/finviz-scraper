@@ -1,7 +1,7 @@
 
 import { scrapeOverviewData } from './page-scrapers/scrape-overview'
 
-export async function scrapeDataForSingleTicker(ticker, rowIndex) {
+export async function scrapeDataForSingleTicker(page, ticker, rowIndex) {
 
     return new Promise(async resolve => {
 

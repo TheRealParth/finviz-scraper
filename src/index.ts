@@ -2,15 +2,26 @@ import { getTickerList } from './___old/get-ticker-list/get-ticker-list'
 import { scrapeAllTickers } from './scraping/scrape-all-tickers'
 // import { scrapeDataForSingleTicker } from './scraping/single-ticker-scraping/scrape-data-for-single-ticker'
 import { getFinvizDataForTickers } from './scraping/get-finviz-data-for-tickers'
+const puppeteer = require('puppeteer')
+import { handleRequest } from './utils/handle-request/handle-request'
+
 
 import { logger } from './utils/logger'
 
 export const main = async () => {
   const tickerList = getTickerList()
   
-  const scrapedTickerList = await scrapeAllTickers()
+  const browser = await puppeteer.launch({ headless: false })
+  const page = await browser.newPage()
 
-  const tickerListWithData = await getFinvizDataForTickers(scrapedTickerList)
+  await page.setViewport({ width: 1200, height: 800 })
+  await page.setRequestInterception(true)
+
+  page.on('request', handleRequest)
+
+  const scrapedTickerList = await scrapeAllTickers(page)
+
+  const tickerListWithData = await getFinvizDataForTickers(page, scrapedTickerList)
 
   logger.info('tickerList with data: ', tickerListWithData)
 

@@ -3,16 +3,16 @@ const puppeteer = require('puppeteer')
 import { handleRequest } from '../utils/handle-request/handle-request'
 import { scrapeDataForSingleTicker } from './single-ticker-scraping/scrape-data-for-single-ticker'
 
-async function getSymbolsForPage(browser, pageNumber) {
+async function getSymbolsForPage(page, pageNumber) {
 
     const firstRowIndex = 1 + 20 * (pageNumber - 1)
     console.log('firstRowIndex: ', firstRowIndex)
 
-    const page = await browser.newPage()
-    await page.setViewport({ width: 1200, height: 800 })
-    await page.setRequestInterception(true);
+    // const page = await browser.newPage()
+    // await page.setViewport({ width: 1200, height: 800 })
+    // await page.setRequestInterception(true);
 
-    page.on('request', handleRequest)
+    // page.on('request', handleRequest)
 
     await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
 
@@ -27,15 +27,16 @@ async function getSymbolsForPage(browser, pageNumber) {
 
 }
 
-export const scrapeAllTickers = async () => {
+export const scrapeAllTickers = async (page) => {
     return new Promise(async resolve => {
 
-        const browser = await puppeteer.launch({ headless: true })
-        const page = await browser.newPage()
-        await page.setViewport({ width: 1200, height: 800 })
-        await page.setRequestInterception(true)
+        console.log('page 1: ', page)
 
-        page.on('request', handleRequest)
+        // const page = await browser.newPage()
+        // await page.setViewport({ width: 1200, height: 800 })
+        // await page.setRequestInterception(true)
+
+        // page.on('request', handleRequest)
 
         await page.goto(`https://finviz.com/screener.ashx`)
 
@@ -57,7 +58,7 @@ export const scrapeAllTickers = async () => {
 
             console.log('pageNumber is: ', pageNumber)
 
-            const symbolsInPage = await getSymbolsForPage(browser, pageNumber);
+            const symbolsInPage = await getSymbolsForPage(page, pageNumber);
 
             console.log('symbolsInPage: ', symbolsInPage)
 
