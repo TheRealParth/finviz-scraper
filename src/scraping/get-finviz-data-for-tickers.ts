@@ -22,7 +22,7 @@ async function scrapeDataForSingleTicker(page, ticker) {
 
         console.log('scraping data for ticker: ', ticker)
 
-        // const browser = await puppeteer.launch({ headless: false })
+        // const browser = await puppeteer.launch({ headless: true })
         // const page = await browser.newPage()
         // await page.setViewport({ width: 1200, height: 800 })
         // await page.setRequestInterception(true)
@@ -33,19 +33,22 @@ async function scrapeDataForSingleTicker(page, ticker) {
 
         // await page.waitForSelector('.statements-table');
 
+
+        
+
         try {
 
             const selector = '.statements-table'
 
-            const quarterlyATag = 'a[contains(quarterly)]'
-            await page.waitForSelector(quarterlyATag, { timeout: 2000 });
+            // const quarterlyATag = 'a[contains(quarterly)]'
+            // await page.waitForSelector(quarterlyATag, { timeout: 2000 });
 
             // quarterlyATag.cl
 
-            await page.evaluate(async () => {
-                await document.querySelector(quarterlyATag)[0].click()
-                // .map(cell => cell.textContent)    
-            })
+            // await page.evaluate(async () => {
+            //     await document.querySelector(quarterlyATag)[0].click()
+            // .map(cell => cell.textContent)    
+            // })
             // (await page.$$eval(quarterlyATag, a => a
             //     .filter(a => a.textContent === 'target text')
             // ))[0].click()
@@ -55,25 +58,68 @@ async function scrapeDataForSingleTicker(page, ticker) {
 
             // await page.waitForSelector(selector, { timeout: 2000 });
 
+            // await page.click("a[contains('quarterly')");
 
+            const aTagElements = await page.evaluate(() => {
+
+                // return new Promise(resolve => {
+
+
+                    return Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
+                        .map((cell) => {
+                            console.log('checking cell: ', cell)
+                            if (cell.textContent === 'quarterly') {
+                                cell.click()
+                                console.log('clicking!!!');
+                                // resolve(true)
+                                return true
+                            }
+
+                            return false
+
+                            // if (i === list.length - 1)
+                            //     resolve(null)
+                        })
+
+
+                // })
+
+                // return symbols
+                // })
+
+                // const pageNumberLinks = 
+                // return pageNumberLinks[pageNumberLinks.length - 1].textContent
+            })
+
+            console.log('ok: ', JSON.stringify(aTagElements, null, 2))
+
+            // if (aTagElements)
+            //     aTagElements.forEach(async cell => {
+            //         console.log('checking a tag: ', cell.textContent)
+            //         if (cell.textContent === 'quarterly')
+            //             await cell.click()
+            //     })
+
+
+            await page.waitForSelector(selector, { timeout: 2000 });
 
             const statementsData = await page.evaluate(() => {
 
-            // return Array.from(document
-            //     .querySelectorAll('td'))
-            //     // .querySelectorAll('.fullview-profile'))
-            //     .map( td => {
+                // return Array.from(document
+                //     .querySelectorAll('td'))
+                //     // .querySelectorAll('.fullview-profile'))
+                //     .map( td => {
 
-            //         console.log('the shit isss: ', td)
+                //         console.log('the shit isss: ', td)
 
-            //         td.textContent
+                //         td.textContent
 
-            //     })
+                //     })
 
-            // const symbolsOnPage = await page.evaluate(() => {
-            // const symbols = 
+                // const symbolsOnPage = await page.evaluate(() => {
+                // const symbols = 
 
-            // await page.evaluate(async () => {
+                // await page.evaluate(async () => {
                 return Array.from(document.querySelectorAll('.statements-table td'))
                     .map(cell => cell.textContent)
 

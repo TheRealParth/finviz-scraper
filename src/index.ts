@@ -1,35 +1,33 @@
 import { getTickerList } from './___old/get-ticker-list/get-ticker-list'
 import { scrapeAllTickers } from './scraping/scrape-all-tickers'
-// import { scrapeDataForSingleTicker } from './scraping/single-ticker-scraping/scrape-data-for-single-ticker'
 import { getFinvizDataForTickers } from './scraping/get-finviz-data-for-tickers'
-const puppeteer = require('puppeteer')
-import { handleRequest } from './utils/handle-request/handle-request'
-
+import { createPuppeteerStuff } from './utils/create-puppeteer-stuff/create-puppeteer-stuff'
+import { login } from './login/login'
 
 import { logger } from './utils/logger'
+import { Page } from 'puppeteer'
 
 export const main = async () => {
-  const tickerList = getTickerList()
   
-  const browser = await puppeteer.launch({ headless: false })
-  const page = await browser.newPage()
+  const [_browser, page] = await createPuppeteerStuff();
 
-  await page.setViewport({ width: 1200, height: 800 })
-  await page.setRequestInterception(true)
-
-  page.on('request', handleRequest)
+  await login(<Page>page);
 
   const scrapedTickerList = await scrapeAllTickers(page)
 
-  const tickerListWithData = await getFinvizDataForTickers(page, scrapedTickerList)
+  const tickerListWithIncomeStatementData = await getFinvizDataForTickers(page, scrapedTickerList)
 
-  logger.info('tickerList with data: ', tickerListWithData)
+  logger.info('tickerList with data: ', tickerListWithIncomeStatementData)
 
-  logger.info(`Input data: ${JSON.stringify(tickerList, null, 2)}`)
+  // TODO - runRegressions
+  // const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeStatementData)
   
-  logger.info(`scraped tickers: ${JSON.stringify(scrapedTickerList, null, 2)}`)
+  // TODO - save data to mongo
+  // const rankedTickerList = calculateRankings(tickerListWithRegressionsRun)
+  
+  // TODO - save data to mongo
 
-  // return getDataForTickers(tickerList)
+  // return saveTickerList(rankedTickerList, new Date())
 }
 
 main().then(data => {
