@@ -21,3 +21,5 @@ new-docs/
 dist/
 logs/
 coverage/
+
+.env

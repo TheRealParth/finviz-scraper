@@ -17,6 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/regression": "^2.0.0",
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.6.3",
     "puppeteer": "^5.5.0",
     "regression": "^2.0.1"
   },
