@@ -16,7 +16,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^5.5.0"
+    "@types/regression": "^2.0.0",
+    "puppeteer": "^5.5.0",
+    "regression": "^2.0.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",

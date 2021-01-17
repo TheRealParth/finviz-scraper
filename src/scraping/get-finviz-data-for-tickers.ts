@@ -2,21 +2,58 @@
 
 // import { handleRequest } from '../utils/handle-request/handle-request'
 
+export const COLUMNS_IN_INCOME_TABLE = 10
 
-export async function getFinvizDataForTickers(page, tickers) {
+export function getFinvizIncomeDataForTickers(page, tickers) {
 
-    let currentTickerIndex = 0
+    return new Promise(async resolve => {
 
-    while (currentTickerIndex < tickers.length) {
+        let currentTickerIndex = 1  // start at 1 to skip the headers row
 
-        await scrapeDataForSingleTicker(page, tickers[currentTickerIndex])
+        const finvizTickersWithData = []
 
-        currentTickerIndex += 1;
-    }
+        while (currentTickerIndex < tickers.length) {
+
+            const incomeStatementCellsText: string[] = await scrapeDataForSingleTicker(page, tickers[currentTickerIndex])
+
+            const incomeDataObj = {}
+
+            for (let i = 0; i < incomeStatementCellsText.length; i++) {
+
+                if (i % COLUMNS_IN_INCOME_TABLE === 0) {
+                    
+                    incomeDataObj[incomeStatementCellsText[i]] = incomeStatementCellsText.filter( (el, index) => {
+
+                        if (index > i && index < (i + COLUMNS_IN_INCOME_TABLE))
+                            return el
+
+                    })
+                }
+            }
+
+            finvizTickersWithData.push({ 
+                symbol: tickers[currentTickerIndex],   
+                income_statements: {
+                   quarterly: incomeDataObj
+                }
+            })
+
+            currentTickerIndex += 1;
+
+            console.log('index now: ', currentTickerIndex)
+
+            if (currentTickerIndex === tickers.length) {
+
+                console.log('returning finviz income data: ', finvizTickersWithData)
+
+                resolve(finvizTickersWithData)
+            }
+        }
+    })
 
 }
 
-async function scrapeDataForSingleTicker(page, ticker) {
+async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
 
     return new Promise(async resolve => {
 
@@ -32,9 +69,6 @@ async function scrapeDataForSingleTicker(page, ticker) {
         await page.goto(`https://finviz.com/quote.ashx?t=${ticker}`)
 
         // await page.waitForSelector('.statements-table');
-
-
-        
 
         try {
 
@@ -65,21 +99,21 @@ async function scrapeDataForSingleTicker(page, ticker) {
                 // return new Promise(resolve => {
 
 
-                    return Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
-                        .map((cell) => {
-                            console.log('checking cell: ', cell)
-                            if (cell.textContent === 'quarterly') {
-                                cell.click()
-                                console.log('clicking!!!');
-                                // resolve(true)
-                                return true
-                            }
+                return Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
+                    .map((cell) => {
+                        console.log('checking cell: ', cell)
+                        if (cell.textContent === 'quarterly') {
+                            cell.click()
+                            console.log('clicking!!!');
+                            // resolve(true)
+                            return true
+                        }
 
-                            return false
+                        return false
 
-                            // if (i === list.length - 1)
-                            //     resolve(null)
-                        })
+                        // if (i === list.length - 1)
+                        //     resolve(null)
+                    })
 
 
                 // })
@@ -142,7 +176,7 @@ async function scrapeDataForSingleTicker(page, ticker) {
 
             console.log('errored: ', error)
 
-            resolve({})
+            resolve([])
 
         }
 

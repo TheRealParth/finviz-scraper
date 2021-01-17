@@ -1,6 +1,7 @@
 import { getTickerList } from './___old/get-ticker-list/get-ticker-list'
 import { scrapeAllTickers } from './scraping/scrape-all-tickers'
-import { getFinvizDataForTickers } from './scraping/get-finviz-data-for-tickers'
+import { getFinvizIncomeDataForTickers } from './scraping/get-finviz-data-for-tickers'
+import { runRegressionsForTickers } from './utils/run-regressions-for-scrapers/run-regressions-for-scrapers'
 import { createPuppeteerStuff } from './utils/create-puppeteer-stuff/create-puppeteer-stuff'
 import { login } from './login/login'
 
@@ -15,12 +16,15 @@ export const main = async () => {
 
   const scrapedTickerList = await scrapeAllTickers(page)
 
-  const tickerListWithIncomeStatementData = await getFinvizDataForTickers(page, scrapedTickerList)
+  console.log('list is: ', scrapedTickerList)
 
-  logger.info('tickerList with data: ', tickerListWithIncomeStatementData)
+  const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(0,7))
 
+  // console.log('tickerList with data: ', JSON.stringify(tickerListWithIncomeStatementData, null, 2))
+  
   // TODO - runRegressions
-  // const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeStatementData)
+  const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeStatementData)
+  console.log('tickerList with regressions: ', JSON.stringify(tickerListWithRegressionsRun, null, 2))
   
   // TODO - save data to mongo
   // const rankedTickerList = calculateRankings(tickerListWithRegressionsRun)

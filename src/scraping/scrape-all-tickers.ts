@@ -3,31 +3,34 @@ const puppeteer = require('puppeteer')
 import { handleRequest } from '../utils/handle-request/handle-request'
 import { scrapeDataForSingleTicker } from './single-ticker-scraping/scrape-data-for-single-ticker'
 
-async function getSymbolsForPage(page, pageNumber) {
+async function getSymbolsForPage(page, pageNumber): Promise<string[]> {
 
-    const firstRowIndex = 1 + 20 * (pageNumber - 1)
-    console.log('firstRowIndex: ', firstRowIndex)
+    return new Promise(async resolve => {
 
-    // const page = await browser.newPage()
-    // await page.setViewport({ width: 1200, height: 800 })
-    // await page.setRequestInterception(true);
-
-    // page.on('request', handleRequest)
-
-    await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
-
-    const symbolsOnPage = await page.evaluate(() => {
-        const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
+        const firstRowIndex = 1 + 20 * (pageNumber - 1)
+        console.log('firstRowIndex: ', firstRowIndex)
+        
+        // const page = await browser.newPage()
+        // await page.setViewport({ width: 1200, height: 800 })
+        // await page.setRequestInterception(true);
+        
+        // page.on('request', handleRequest)
+        
+        await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
+        
+        const symbolsOnPage: string[] = await page.evaluate(() => {
+            const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
             .map(cell => cell.textContent)
-
-        return symbols
+            
+            return symbols
+        })
+        
+        resolve(symbolsOnPage)
     })
-
-    return symbolsOnPage
 
 }
 
-export const scrapeAllTickers = async (page) => {
+export async function scrapeAllTickers(page): Promise<string[]> {
     return new Promise(async resolve => {
 
         console.log('page 1: ', page)

@@ -7,7 +7,6 @@ export async function scrapeDataForSingleTicker(page, ticker, rowIndex) {
 
         const overviewData = await scrapeOverviewData(page, rowIndex)
 
-
         // const valuationData = await scrapeValuationData()
         // const financialData = await scrapeFinancialData()
         // const ownershipData = await scrapeOwnershipData()
