@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 import { Browser, Page } from "puppeteer";
 import { handleRequest } from '../handle-request/handle-request'
 
-export async function createPuppeteerStuff(): Promise<Array<Browser | Page>> {
+export async function createPuppeteerStuff(): Promise<Page> {
 
   const browser = await puppeteer.launch({ headless: false })
   const page = await browser.newPage()
@@ -12,5 +12,5 @@ export async function createPuppeteerStuff(): Promise<Array<Browser | Page>> {
 
   page.on('request', handleRequest)
   
-  return [browser, page]  
+  return page
 }
