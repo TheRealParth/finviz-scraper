@@ -70,7 +70,6 @@ export const getDataForTickers = async tickerList => {
         return document.querySelectorAll('a[target="_blank"]')[1].textContent
       })
 
-
       results.push({
         symbol: ticker,
         companyName,

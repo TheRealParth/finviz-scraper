@@ -33,21 +33,6 @@ export function getFinvizIncomeDataForTickers(page, tickers) {
 
                 const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
 
-                const v1 = key.toLowerCase()
-
-                console.log('v1 ', v1)
-
-                const v2 = v1.replace(/[.]/g, '')
-
-                console.log('v2 ', v2)
-
-                const v3 = v2.replace(/[ ]/g, '_')
-
-                console.log('v3 ', v3)
-
-                console.log('gggg ', key, val)
-                console.log('gggg valid', validKey)
-
                 return { ...acc, [validKey]: val }
 
             }, {})
@@ -80,7 +65,6 @@ async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
 
         console.log('scraping data for ticker: ', ticker)
 
-
         await page.goto(`https://finviz.com/quote.ashx?t=${ticker}`)
 
 
@@ -88,35 +72,33 @@ async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
 
             const selector = '.statements-table'
 
-
             console.log('waiting for statements table...')
 
-            await page.waitForSelector(selector, { timeout: 2000 });
+            // await page.waitForSelector(selector, { timeout: 2000 });
+            
+            await page.waitForSelector('a.tab-link', { 
+                waitUntil: 'networkidle0',
+                timeout: 60 
+            });
 
             console.log('evaluating a tags...')
             const aTagElements = await page.evaluate(() => {
-
-                console.log('evaluating a tags yep...')
-
                 return Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
                     .map(async (cell) => {
                         console.log('checking cell: ', cell)
                         if (cell.textContent === 'quarterly') {
                             cell.click()
                             console.log('clicking!!!');
-
-
                             return Promise.resolve(true)
                         }
                     })
             })
-            console.log('ok: ', JSON.stringify(aTagElements, null, 2))
 
             try {
 
                 await page.waitForNavigation({
                     waitUntil: 'networkidle0',
-                    timeout: 1000
+                    timeout: 70
                 });
             }
 
@@ -129,13 +111,10 @@ async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
 
                 })
 
-                console.log('got statements data: ', JSON.stringify(statementsData, null, 2))
+                // console.log('got statements data: ', JSON.stringify(statementsData, null, 2))
                 console.log('statements data length: ', statementsData.length)
-                console.log('statements[0]: ', statementsData[0])
 
                 resolve(statementsData)
-
-
             }
 
         }

@@ -16,9 +16,13 @@ export async function login(page: Page) {
         await page.type(pwInputSelector, process.env.FINVIZ_PW)
         await page.click(loginBtnSelector)
 
-        await page.waitForSelector('.is-elite', { timeout: 7000 });
-
-        resolve(null)
-
+        
+        try {
+            await page.waitForSelector('.is-elite', { timeout: 4000 });
+            resolve(true)
+        } 
+        catch (err) {
+            resolve(null)
+        }
     })
 }

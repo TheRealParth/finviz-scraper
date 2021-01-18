@@ -9,14 +9,10 @@ async function getSymbolsForPage(page, pageNumber): Promise<string[]> {
 
         const firstRowIndex = 1 + 20 * (pageNumber - 1)
         console.log('firstRowIndex: ', firstRowIndex)
-        
-        // const page = await browser.newPage()
-        // await page.setViewport({ width: 1200, height: 800 })
-        // await page.setRequestInterception(true);
-        
-        // page.on('request', handleRequest)
+
         
         await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
+        // await page.waitForNavigation()
         
         const symbolsOnPage: string[] = await page.evaluate(() => {
             const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
@@ -53,9 +49,15 @@ export async function scrapeAllTickers(page): Promise<string[]> {
 
         console.log('number of pages: ', numberOfPages);
 
-        const numOfElements = 3
+        // const smallerNumberOfElements = 3
+        // const pageNumbers = (new Array(smallerNumberOfElements)).fill(0).map((_, indx) => indx + 1)
 
-        const pageNumbers = (new Array(numOfElements)).fill(0).map((_, indx) => indx + 1)
+
+        const cappedNumberOfPages = process.env.MAX_PAGES_TO_SCRAPE ? Math.min(+process.env.MAX_PAGES_TO_SCRAPE, numberOfPages) : numberOfPages
+
+        const pageNumbers = (new Array(cappedNumberOfPages - 1)).fill(0).map((_, indx) => indx + 1)
+
+        console.log('scraping data for: ', pageNumbers.length, ' pages.')
 
         for (const pageNumber of pageNumbers) {
 
@@ -69,11 +71,11 @@ export async function scrapeAllTickers(page): Promise<string[]> {
 
         }
 
-        // console.log('done! ', JSON.stringify(results))
+        // console.log('scraped symbols: ', JSON.stringify(results))
 
-        // resolve(results)
+        console.log(`Scraped ${symbols.length} symbols.`)
+
         resolve(symbols)
-
     })
 
 }

@@ -18,7 +18,8 @@ export const main = async () => {
 
   const scrapedTickerList = await scrapeAllTickers(page)
 
-  const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(20, 30))
+  // const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(20, 30))
+  const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList)
 
   const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeStatementData)
 

@@ -17,7 +17,7 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         chronologicalDataPoints = latestFirstDataPoints
             .reverse().map((revenueDataPoint, index) => [index, +(revenueDataPoint.replace(/,/g, ''))])
 
-        console.log('chronologicalpoints points: ', chronologicalDataPoints)
+        console.log('chronological points: ', chronologicalDataPoints)
 
         const linearRegModel = regression.linear(chronologicalDataPoints)
         const exponentialRegModel = regression.exponential(chronologicalDataPoints)
