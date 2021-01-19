@@ -1,7 +1,7 @@
 require('dotenv').config()
 
-import { scrapeAllTickers } from './scraping/scrape-all-tickers'
-import { getFinvizIncomeDataForTickers } from './scraping/get-finviz-data-for-tickers'
+import { scrapeAllTickers, scrapeAllTickersWithCluster } from './scraping/scrape-all-tickers'
+import { getFinvizIncomeDataForTickers, getFinvizIncomeDataForTickersWithCluster } from './scraping/get-finviz-data-for-tickers'
 import { runRegressionsForTickers } from './utils/run-regressions-for-scrapers/run-regressions-for-scrapers'
 import { createPuppeteerStuff } from './utils/create-puppeteer-stuff/create-puppeteer-stuff'
 import { login } from './login/login'
@@ -16,10 +16,14 @@ export const main = async () => {
 
   await login(page);
 
-  const scrapedTickerList = await scrapeAllTickers(page)
+  const scrapedTickerList = await scrapeAllTickersWithCluster(page)
+
+  // const scrapedTickerList = await scrapeAllTickers(page)
 
   // const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(20, 30))
-  const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList)
+  const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickersWithCluster(page, scrapedTickerList)
+
+  console.log('here')
 
   const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeStatementData)
 
