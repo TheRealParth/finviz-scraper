@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 
 export const getDataForTickers = async tickerList => {
   return new Promise(async resolve => {
-    const browser = await puppeteer.launch({ headless: true })
+    const browser = await puppeteer.launch({ headless: false })
 
     const results = []
 
