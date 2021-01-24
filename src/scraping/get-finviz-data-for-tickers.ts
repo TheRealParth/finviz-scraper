@@ -1,7 +1,6 @@
 
 const { Cluster } = require('puppeteer-cluster');
 
-
 export async function getFinvizIncomeDataForTickersWithCluster(page, tickers) {
 
     console.log('getting income data for tickers: ', tickers)
@@ -34,144 +33,176 @@ export async function getFinvizIncomeDataForTickersWithCluster(page, tickers) {
 
                 console.log('checking stock page at url: ', url)
 
-                // await page.goto(url)
+                await page.goto(url, { waitUntil: 'networkidle0' })
 
-                await page.goto(url, { waitUntil: 'networkidle2' })
+                // await page.screenshot(`./img/${ticker}`)
 
                 console.log('evaluating a tags...')
+
+                // page.on('console', consoleObj => console.log(consoleObj.text()));
+
                 const aTagElements = await page.evaluate(() => {
-                    return Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
+                    return new Promise(async resolve => {
+
+                        const aTagsText = Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
                         .map(async (cell) => {
-                            console.log('checking cell: ', cell)
-                            if (cell.textContent === 'quarterly') {
-                                cell.click()
-                                console.log('clicking!!!');
-                                return Promise.resolve(true)
-                            }
+                        console.log('checking cell: ', cell.textContent)
+                        if (cell.textContent === 'quarterly') {
+
+                            console.log('clicking!!!');
+
+                            await cell.click()
+
+                        }
+                        return cell.textContent
                         })
-                })
 
-                // await page.waitForSelector('.statements-table', { timeout: 1000 })
+                        // for (let i = 0; i < aTagElements.length; i++) {
+                        //     if (aTagElements[i].textContent === 'quarterly') {
 
-                await page.waitForTimeout(200)
+                        //         console.log('clicking!!!');
 
-                const statementsData = await page.evaluate(() => {
-
-                    return Array.from(document.querySelectorAll('.statements-table td'))
-                        .map(cell => cell.textContent)
-
-                })
-
-                // console.log('statements data... ', statementsData)
-
-                const incomeDataObj = {}
-
-                const numberOfColumns = statementsData.indexOf('Period Length')
-
-                for (let i = 0; i < statementsData.length; i++) {
-
-                    if (i % numberOfColumns === 0) {
-
-                        incomeDataObj[statementsData[i]] = statementsData.filter((el, index) => {
-
-                            if (index > i && index < (i + numberOfColumns))
-                                return el
-
-                        })
-                    }
-                }
-
-                const niceKeysIncomeDataObj = Object.entries(incomeDataObj).reduce((acc, [key, val]) => {
-                    const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
-                    return { ...acc, [validKey]: val }
-                }, {})
-
-                finvizTickersWithData.push({
-                    symbol: url.slice(baseUrl.length),
-                    income_statements: {
-                        quarterly: niceKeysIncomeDataObj
-                    }
-                })
-            }
-
-            catch (err) {
-                console.log(`welp, no income statements for ${ticker}`)
-                console.log(`err: ${err}`)
-            }
-
-        })
-
-        console.log('queueing...')
-
-        // for (const ticker of tickers.slice(0, 4)) {
-        for (const ticker of tickers) {
-            console.log('queuing ticker: ', ticker)
-            cluster.queue(`https://finviz.com/quote.ashx?t=${ticker}`);
-        }
-
-        await cluster.idle();
-        console.log('idle2...')
-        await cluster.close();
-        console.log('closing2...')
-        console.log('resolving symbols2: ', finvizTickersWithData)
-        console.log('queueing finished...')
-    })();
-
-    return Promise.resolve(finvizTickersWithData)
-}
-
-export function getFinvizIncomeDataForTickers(page, tickers) {
-
-    return new Promise(async resolve => {
-
-        let currentTickerIndex = 1  // start at 1 to skip the headers row
-
-        const finvizTickersWithData = []
-
-        while (currentTickerIndex < tickers.length) {
-
-            const incomeStatementCellsText: string[] = await scrapeDataForSingleTicker(page, tickers[currentTickerIndex])
-
-            const incomeDataObj = {}
-
-            const numberOfColumns = incomeStatementCellsText.indexOf('Period Length')
-
-            for (let i = 0; i < incomeStatementCellsText.length; i++) {
-
-                if (i % numberOfColumns === 0) {
-
-                    incomeDataObj[incomeStatementCellsText[i]] = incomeStatementCellsText.filter((el, index) => {
-
-                        if (index > i && index < (i + numberOfColumns))
-                            return el
-
+                        //         await aTagElements[i].click()
+                                
+                        //     }
+                            
+                        // }
+                        
+                        
+                        resolve(aTagsText)
                     })
-                }
-            }
-
-            const niceKeysIncomeDataObj = Object.entries(incomeDataObj).reduce((acc, [key, val]) => {
-
-                const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
-
-                return { ...acc, [validKey]: val }
-
-            }, {})
-
-            console.log('pushing object: ', {
-                symbol: tickers[currentTickerIndex],
-                income_statements: {
-                    quarterly: niceKeysIncomeDataObj
-                }
-            })
-
-            finvizTickersWithData.push({
-                symbol: tickers[currentTickerIndex],
-                income_statements: {
-                    quarterly: niceKeysIncomeDataObj
-                }
-            })
-
-            currentTickerIndex += 1;
+                })
+                
+                console.log('looked through a tags: ', aTagElements)
+                
+                // await page.waitForResponse('statement')
+                
+                
+                // await page.waitForNavigation()
+                await page.waitForTimeout(350)
+                
+                await page.waitForSelector('.statements-table', { timeout: 500 })
+                
+                const statementsData = await page.evaluate(() => {
+                    
+                    return Array.from(document.querySelectorAll('.statements-table td'))
+                    .map(cell => cell.textContent)
+                    
+                })
+                
+                return statementsData
+                console.log('statements data is: ', statementsData)
+                
+                // console.log('statements data... ', statementsData)
+                
+                const incomeDataObj = {}
+                
+                const numberOfColumns = statementsData.indexOf('Period Length')
+                
+                // for (let i = 0; i < statementsData.length; i++) {
+                    
+                    //     if (i % numberOfColumns === 0) {
+                        
+                        //         incomeDataObj[statementsData[i]] = statementsData.filter((el, index) => {
+                            
+                            //             if (index > i && index < (i + numberOfColumns))
+                            //                 return el
+                            
+                            //         })
+                            //     }
+                            // }
+                            
+                            // const niceKeysIncomeDataObj = Object.entries(incomeDataObj).reduce((acc, [key, val]) => {
+                                //     return { ...acc, [validKey]: val }
+                                // }, {})
+                                
+                                // finvizTickersWithData.push({
+                                    //     symbol: url.slice(baseUrl.length),
+                                    //     income_statements: {
+                                        //         quarterly: niceKeysIncomeDataObj
+                                        //     }
+                                        // })
+                                    }
+                                    
+                                    catch (err) {
+                                        console.log(`welp, no income statements for ${ticker}`)
+                                        console.log(`err: ${err}`)
+                                    }
+                                    
+                                })
+                                
+                                console.log('queueing...')
+                                
+                                // for (const ticker of tickers.slice(0, 4)) {
+                                    for (const ticker of tickers) {
+                                        console.log('queuing ticker: ', ticker)
+                                        cluster.queue(`https://finviz.com/quote.ashx?t=${ticker}`);
+                                    }
+                                    
+                                    await cluster.idle();
+                                    console.log('idle2...')
+                                    await cluster.close();
+                                    console.log('closing2...')
+                                    console.log('resolving symbols2: ', finvizTickersWithData)
+                                    console.log('queueing finished...')
+                                    
+                                    return Promise.resolve(finvizTickersWithData)
+                                })();
+                                
+                            }
+                            
+                            export function getFinvizIncomeDataForTickers(page, tickers) {
+                                
+                                return new Promise(async resolve => {
+                                    
+                                    let currentTickerIndex = 1  // start at 1 to skip the headers row
+                                    
+                                    const finvizTickersWithData = []
+                                    
+                                    while (currentTickerIndex < tickers.length) {
+                                        
+                                        const incomeStatementCellsText: string[] = await scrapeDataForSingleTicker(page, tickers[currentTickerIndex])
+                                        
+                                        const incomeDataObj = {}
+                                        
+                                        const numberOfColumns = incomeStatementCellsText.indexOf('Period Length')
+                                        
+                                        for (let i = 0; i < incomeStatementCellsText.length; i++) {
+                                            
+                                            if (i % numberOfColumns === 0) {
+                                                
+                                                incomeDataObj[incomeStatementCellsText[i]] = incomeStatementCellsText.filter((el, index) => {
+                                                    
+                                                    if (index > i && index < (i + numberOfColumns))
+                                                    return el
+                                                    
+                                                })
+                                            }
+                                        }
+                                        
+                                        const niceKeysIncomeDataObj = Object.entries(incomeDataObj).reduce((acc, [key, val]) => {
+                                            
+                                            const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
+                                            
+                                            return { ...acc, [validKey]: val }
+                                            
+                                        }, {})
+                                        
+                                        console.log('pushing object: ', {
+                                            symbol: tickers[currentTickerIndex],
+                                            income_statements: {
+                                                quarterly: niceKeysIncomeDataObj
+                                            }
+                                        })
+                                        
+                                        finvizTickersWithData.push({
+                                            symbol: tickers[currentTickerIndex],
+                                            income_statements: {
+                                                quarterly: niceKeysIncomeDataObj
+                                            }
+                                        })
+                                        
+                                        currentTickerIndex += 1;
 
             console.log('index now: ', currentTickerIndex)
 
@@ -200,9 +231,9 @@ async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
             const selector = '.statements-table'
 
             console.log('waiting for statements table...')
-            
+
             // await page.waitForSelector(selector, { timeout: 2000 });
-            
+
             await page.waitForSelector('a.tab-link', {
                 waitForSelector: true,
                 timeout: 1000

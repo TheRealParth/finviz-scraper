@@ -11,7 +11,7 @@ export async function createPuppeteerStuff(): Promise<Page> {
   
   // (async () => {
     console.log('creating puppeteer stuff')
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch({ headless: true });
     // const page = await browser.newPage();
   // const browser = await puppeteer.launch({
   //   headless: true
@@ -26,9 +26,9 @@ export async function createPuppeteerStuff(): Promise<Page> {
   // page.setUserAgent(
   //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4182.0 Safari/537.36"
   // );
-  // page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36")
+  page.setUserAgent("Chrome")
 
-  // await page.emulate(iPhone);
+  // await page.emulate('chrome');
 
   await page.setViewport({ width: 1200, height: 1500 })
   await page.setRequestInterception(true)

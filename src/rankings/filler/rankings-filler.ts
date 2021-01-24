@@ -39,9 +39,9 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
 
     tickerDataWithGrowthCalcs.forEach(stockObj => {
 
-        const revenue_1y_ratio = stockObj.growth_calculations.revenue['t+1y/t_ratio']
-        const gross_profit_1y_ratio = stockObj.growth_calculations.gross_profit['t+1y/t_ratio']
-        const net_profit_1y_ratio = stockObj.growth_calculations.net_profit['t+1y/t_ratio']
+        const revenue_1y_ratio = stockObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD']
+        const gross_profit_1y_ratio = stockObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD']
+        const net_profit_1y_ratio = stockObj.growth_calculations.net_profit['t+1y/t_quarterly_PGpD']
 
         console.log('filling rankings for ', stockObj.symbol, ' ', revenue_1y_ratio, ', ', gross_profit_1y_ratio, ', ', net_profit_1y_ratio, ', ')
 

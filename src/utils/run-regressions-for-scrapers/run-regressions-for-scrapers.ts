@@ -2,10 +2,12 @@
 import { Result } from 'regression'
 
 const regression = require('regression');
+const clonedeep = require('lodash.clonedeep')
 
 export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
 
     let chronologicalDataPoints = []
+    let chronologicalPointsShiftedToZeroY = []
     let linearModelData: Result | {} = {}
     let exponentialModelData: Result | {} = {}
     let logarithmicModelData: Result | {} = {}
@@ -17,17 +19,38 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         chronologicalDataPoints = latestFirstDataPoints
             .reverse().map((revenueDataPoint, index) => [index, +(revenueDataPoint.replace(/,/g, ''))])
 
-        console.log('chronological points: ', chronologicalDataPoints)
 
-        const linearRegModel = regression.linear(chronologicalDataPoints)
-        const exponentialRegModel = regression.exponential(chronologicalDataPoints)
-        const logarithmicReg = regression.logarithmic(chronologicalDataPoints)
+
+        // shift points up to y=0 if necessary
+
+        let minYValue = 0;
+
+        chronologicalDataPoints.forEach(point => {
+            if (point[1] < minYValue)
+                minYValue = point[1]
+        })
+
+        chronologicalPointsShiftedToZeroY = clonedeep(chronologicalDataPoints).map(point => {
+            point[1] -= minYValue
+            return point
+        })
+
+        console.log('chronological points: ', chronologicalDataPoints)
+        console.log('chronological points shifted up: ', chronologicalPointsShiftedToZeroY)
+
+        const linearRegModel = regression.linear(chronologicalPointsShiftedToZeroY)
+        const exponentialRegModel = regression.exponential(chronologicalPointsShiftedToZeroY)
+        const logarithmicReg = regression.logarithmic(chronologicalPointsShiftedToZeroY)
+
+        console.log('lin: ', JSON.stringify(linearRegModel, null, 2))
+        console.log('exp: ', JSON.stringify(exponentialRegModel, null, 2))
+        console.log('log: ', JSON.stringify(logarithmicReg, null, 2))
 
         linearModelData = linearRegModel
         exponentialModelData = exponentialRegModel
         logarithmicModelData = logarithmicReg
 
-        numberOfColumns = chronologicalDataPoints.length
+        numberOfColumns = chronologicalPointsShiftedToZeroY.length
     }
 
     let regression_best_fit_line_type = 'NONE'
@@ -51,7 +74,7 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         r2s.push(logR2)
 
     console.log('max of ', linR2, expR2, logR2, ' is: ', Math.max(...r2s))
-    
+
     let next_year_quarterly_revenue_prediction = null;
 
     if (Math.max(...r2s) === linR2) {
@@ -59,26 +82,27 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         regression_best_fit_line_equation = (linearModelData as Result).string
         next_year_quarterly_revenue_prediction = (linearModelData as Result).predict(numberOfColumns + 4 - 1)[1]
     }
-    
+
     if (Math.max(...r2s) === expR2) {
         regression_best_fit_line_type = 'EXPONENTIAL'
         regression_best_fit_line_equation = (exponentialModelData as Result).string
         next_year_quarterly_revenue_prediction = (exponentialModelData as Result).predict(numberOfColumns + 4 - 1)[1]
     }
-    
+
     if (Math.max(...r2s) === logR2) {
         regression_best_fit_line_type = 'LOGARITHMIC'
         regression_best_fit_line_equation = (logarithmicModelData as Result).string
         next_year_quarterly_revenue_prediction = (logarithmicModelData as Result).predict(numberOfColumns + 4 - 1)[1]
     }
 
-    console.log('ratio calc: ', next_year_quarterly_revenue_prediction, chronologicalDataPoints, chronologicalDataPoints.length)
+    console.log('ratio calc: ', next_year_quarterly_revenue_prediction, chronologicalPointsShiftedToZeroY, chronologicalPointsShiftedToZeroY.length)
 
-    let tPlusRatio = null
+    // let tPlusRatio = null
+    let tPlusDifference = null
 
-    if (next_year_quarterly_revenue_prediction && chronologicalDataPoints)
-        tPlusRatio = +(next_year_quarterly_revenue_prediction / (chronologicalDataPoints[chronologicalDataPoints.length - 1])[1]).toFixed(2)
-
+    if (next_year_quarterly_revenue_prediction && chronologicalPointsShiftedToZeroY)
+        tPlusDifference = +(next_year_quarterly_revenue_prediction - (chronologicalPointsShiftedToZeroY[chronologicalPointsShiftedToZeroY.length - 1])[1]).toFixed(4)
+    
     delete (linearModelData as Result).predict
     delete (exponentialModelData as Result).predict
     delete (logarithmicModelData as Result).predict
@@ -92,28 +116,24 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         regression_best_fit_line_type,
         regression_best_fit_line_equation,
         next_year_quarterly_revenue_prediction,
-        't+1y/t_ratio': tPlusRatio
+        't+1y/t_difference': tPlusDifference
     }
 }
 
 export function runRegressionsForTickers(tickerListPageData) {
 
-    // console.log('running regression... tickerList with data: ', JSON.stringify(tickerListPageData, null, 2))
-
     return tickerListPageData.map(incomeDataForTicker => {
 
-        console.log('income data for ticker: ', JSON.stringify(incomeDataForTicker, null, 2))
+        // console.log('income data for ticker: ', JSON.stringify(incomeDataForTicker, null, 2))
 
-        console.log('rev data: ', incomeDataForTicker.income_statements.quarterly['total_revenue'])
-
-        console.log('gross prof data: ', incomeDataForTicker.income_statements.quarterly['gross_profit'])
-
-        console.log('net prof data: ', incomeDataForTicker.income_statements.quarterly['net_income'])
+        console.log('rev data: ', incomeDataForTicker.income_statements.quarterly.data['total_revenue'])
+        console.log('gross prof data: ', incomeDataForTicker.income_statements.quarterly.data['gross_profit'])
+        console.log('net prof data: ', incomeDataForTicker.income_statements.quarterly.data['net_income'])
 
         incomeDataForTicker.growth_calculations = {
-            revenue: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly['total_revenue']),
-            gross_profit: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly['gross_profit']),
-            net_profit: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly['net_income'])
+            revenue: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['total_revenue']),
+            gross_profit: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['gross_profit']),
+            net_profit: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['net_income'])
         }
 
         return incomeDataForTicker

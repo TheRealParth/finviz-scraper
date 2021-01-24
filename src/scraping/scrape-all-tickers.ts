@@ -30,7 +30,7 @@ export async function scrapeAllTickersWithCluster(page) {
 
         await cluster.task(async ({ page, data: url }) => {
 
-            await page.goto(url, { waitUntil: 'networkidle2' })
+            await page.goto(url, { waitUntil: 'domcontentloaded' })
 
             const symbolsOnPage: string[] = await page.evaluate(() => {
                 const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
@@ -57,78 +57,70 @@ export async function scrapeAllTickersWithCluster(page) {
     })();
 }
 
-async function getSymbolsForPage(page, pageNumber): Promise<string[]> {
+/**
+ *  Deprecated, son.
+ */
 
-    return new Promise(async resolve => {
+// async function getSymbolsForPage(page, pageNumber): Promise<string[]> {
 
-        const firstRowIndex = 1 + 20 * (pageNumber - 1)
-        console.log('firstRowIndex: ', firstRowIndex)
+//     return new Promise(async resolve => {
 
-
-        await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
-        // await page.waitForNavigation()
-
-        const symbolsOnPage: string[] = await page.evaluate(() => {
-            const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
-                .map(cell => cell.textContent)
-
-            return symbols
-        })
-
-        resolve(symbolsOnPage)
-    })
-
-}
-
-export async function scrapeAllTickers(page): Promise<string[]> {
-    return new Promise(async resolve => {
-
-        // const page = await browser.newPage()
-        // await page.setViewport({ width: 1200, height: 800 })
-        // await page.setRequestInterception(true)
-
-        // page.on('request', handleRequest)
-
-        await page.goto(`https://finviz.com/screener.ashx`)
-
-        const results = []
-        let symbols = []
-
-        const numberOfPages = await page.evaluate(() => {
-            const pageNumberLinks = document.querySelectorAll('.screener-pages')
-            return pageNumberLinks[pageNumberLinks.length - 1].textContent
-        })
-
-        console.log('number of pages: ', numberOfPages);
-
-        // const smallerNumberOfElements = 3
-        // const pageNumbers = (new Array(smallerNumberOfElements)).fill(0).map((_, indx) => indx + 1)
+//         const firstRowIndex = 1 + 20 * (pageNumber - 1)
+//         console.log('firstRowIndex: ', firstRowIndex)
 
 
-        const cappedNumberOfPages = process.env.MAX_PAGES_TO_SCRAPE ? Math.min(+process.env.MAX_PAGES_TO_SCRAPE, numberOfPages) : numberOfPages
+//         await page.goto(`https://finviz.com/screener.ashx?r=${firstRowIndex}`, { waitUntil: 'networkidle2' })
+//         // await page.waitForNavigation()
 
-        const pageNumbers = (new Array(cappedNumberOfPages)).fill(0).map((_, indx) => indx + 1)
+//         const symbolsOnPage: string[] = await page.evaluate(() => {
+//             const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
+//                 .map(cell => cell.textContent)
 
-        console.log('scraping data for: ', pageNumbers.length, ' pages.')
+//             return symbols
+//         })
 
-        for (const pageNumber of pageNumbers) {
+//         resolve(symbolsOnPage)
+//     })
 
-            console.log('pageNumber is: ', pageNumber)
+// }
 
-            const symbolsInPage = await getSymbolsForPage(page, pageNumber);
+// export async function scrapeAllTickers(page): Promise<string[]> {
+//     return new Promise(async resolve => {
 
-            console.log('symbolsInPage: ', symbolsInPage)
+//         await page.goto(`https://finviz.com/screener.ashx`)
 
-            symbols = [...symbols, ...symbolsInPage]
+//         const results = []
+//         let symbols = []
 
-        }
+//         const numberOfPages = await page.evaluate(() => {
+//             const pageNumberLinks = document.querySelectorAll('.screener-pages')
+//             return pageNumberLinks[pageNumberLinks.length - 1].textContent
+//         })
 
-        // console.log('scraped symbols: ', JSON.stringify(results))
+//         console.log('number of pages: ', numberOfPages);
 
-        console.log(`Scraped ${symbols.length} symbols.`)
+//         const cappedNumberOfPages = process.env.MAX_PAGES_TO_SCRAPE ? Math.min(+process.env.MAX_PAGES_TO_SCRAPE, numberOfPages) : numberOfPages
 
-        resolve(symbols)
-    })
+//         const pageNumbers = (new Array(cappedNumberOfPages)).fill(0).map((_, indx) => indx + 1)
 
-}
+//         console.log('scraping data for: ', pageNumbers.length, ' pages.')
+
+//         for (const pageNumber of pageNumbers) {
+
+//             console.log('pageNumber is: ', pageNumber)
+
+//             const symbolsInPage = await getSymbolsForPage(page, pageNumber);
+
+//             console.log('symbolsInPage: ', symbolsInPage)
+
+//             symbols = [...symbols, ...symbolsInPage]
+
+//         }
+
+//         console.log(`Scraped ${symbols.length} symbols.`)
+
+//         resolve(symbols)
+//     })
+
+// }
 
