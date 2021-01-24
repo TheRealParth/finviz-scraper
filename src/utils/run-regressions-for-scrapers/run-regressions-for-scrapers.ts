@@ -96,11 +96,11 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     }
 }
 
-export function runRegressionsForTickers(tickerListWithIncomeStatementData) {
+export function runRegressionsForTickers(tickerListPageData) {
 
-    // console.log('running regression... tickerList with data: ', JSON.stringify(tickerListWithIncomeStatementData, null, 2))
+    // console.log('running regression... tickerList with data: ', JSON.stringify(tickerListPageData, null, 2))
 
-    return tickerListWithIncomeStatementData.map(incomeDataForTicker => {
+    return tickerListPageData.map(incomeDataForTicker => {
 
         console.log('income data for ticker: ', JSON.stringify(incomeDataForTicker, null, 2))
 

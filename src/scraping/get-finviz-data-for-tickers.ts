@@ -12,7 +12,7 @@ export async function getFinvizIncomeDataForTickersWithCluster(page, tickers) {
 
     // return Promise.resolve('foo')
 
-    await (async () => {
+    return await (async () => {
 
         console.log('in the async...')
 
@@ -82,11 +82,8 @@ export async function getFinvizIncomeDataForTickersWithCluster(page, tickers) {
                 }
 
                 const niceKeysIncomeDataObj = Object.entries(incomeDataObj).reduce((acc, [key, val]) => {
-
                     const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
-
                     return { ...acc, [validKey]: val }
-
                 }, {})
 
                 finvizTickersWithData.push({
@@ -159,6 +156,13 @@ export function getFinvizIncomeDataForTickers(page, tickers) {
                 return { ...acc, [validKey]: val }
 
             }, {})
+
+            console.log('pushing object: ', {
+                symbol: tickers[currentTickerIndex],
+                income_statements: {
+                    quarterly: niceKeysIncomeDataObj
+                }
+            })
 
             finvizTickersWithData.push({
                 symbol: tickers[currentTickerIndex],

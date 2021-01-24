@@ -12,25 +12,21 @@ import { logger } from './utils/logger'
 
 export const main = async () => {
 
-
-  console.log('foo1')
   const page = await createPuppeteerStuff();
-  console.log('foo2')
-  
+
   await login(page);
   
-  console.log('foo3')
   const scrapedTickerList = await scrapeAllTickersWithCluster(page)
 
-  // const scrapedTickerList = await scrapeAllTickers(page)
-  // console.log('here we go ', scrapedTickerList)
+  console.log('tickers: ', scrapedTickerList)
+  
+  // const tickerListPageData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(20, 30))
+  
+  const tickerListPageData = await getFinvizIncomeDataForTickersWithCluster(page, scrapedTickerList)
 
-  // const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(20, 30))
-  // TODO -const tickerListWithIncomeStatementData = await getFinvizIncomeDataForTickersWithCluster(page, scrapedTickerList)
+  console.log('ticker list with page data: ', JSON.stringify(tickerListPageData))
 
-  // console.log('here we go2: ', JSON.stringify(tickerListWithIncomeStatementData))
-
-  // const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeStatementData)
+  // const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListPageData)
 
   // const [rankedTickerList, rankingsMaxesAndMins] = calculateRankings(tickerListWithRegressionsRun)
 
