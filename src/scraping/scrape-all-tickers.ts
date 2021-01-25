@@ -6,8 +6,6 @@ export async function scrapeAllTickersWithCluster(page) {
 
     let symbols = []
 
-    console.log('hmmmmmm')
-    
     const numberOfPages = await page.evaluate(() => {
         const pageNumberLinks = document.querySelectorAll('.screener-pages')
         return pageNumberLinks[pageNumberLinks.length - 1].textContent
@@ -51,7 +49,7 @@ export async function scrapeAllTickersWithCluster(page) {
         await cluster.idle();
         await cluster.close();
 
-        console.log('scraped symbols: ', symbols)
+        // console.log('scraped symbols: ', symbols)
 
         return Promise.resolve(symbols)
     })();

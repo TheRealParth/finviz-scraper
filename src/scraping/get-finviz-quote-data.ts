@@ -33,30 +33,26 @@ export async function getFinvizQuoteDataForTickersWithCluster(page, tickers) {
                     .from(document.querySelectorAll('.fullview-title tr td'))
                     .map(cell => cell.textContent))
 
-                console.log('chaba ', headerAndIndustriesText)
-
                 const companyFullName = headerAndIndustriesText[1]
-                
+
                 const companyIndustries = headerAndIndustriesText[2].split(' | ')
 
                 const quoteData = await page.evaluate(() => Array
                     .from(document.querySelectorAll('table.snapshot-table2 td'))
                     .map(cell => cell.textContent))
 
-                console.log('quote data is: ', quoteData)
+                // console.log('quote data is: ', quoteData)
 
                 const quoteDataObj = {}
 
                 for (let i = 0; i < quoteData.length; i++)
                     if (i % 2 === 0) {
                         const validKey = quoteData[i].toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
-
-                        console.log('valid key: ', validKey)
                         quoteDataObj[validKey] = quoteData[i + 1]
                     }
 
 
-                console.log('made a quote data object! ', JSON.stringify(quoteDataObj, null, 2))
+                // console.log('made a quote data object! ', JSON.stringify(quoteDataObj, null, 2))
 
                 finvizTickersWithData.push({
                     symbol: url.slice(baseUrl.length),
@@ -66,27 +62,20 @@ export async function getFinvizQuoteDataForTickersWithCluster(page, tickers) {
                 })
             }
             catch (err) {
-                console.log('err happened: ', err)
+                console.log('dang son, an error happened getting quote data: ', err)
             }
 
         })
         //         // for (const ticker of tickers.slice(0, 4)) {
         for (const ticker of tickers) {
-            console.log('queuing ticker: ', ticker)
             cluster.queue(`https://finviz.com/quote.ashx?t=${ticker}`);
         }
 
         await cluster.idle();
-        console.log('idle2...')
         await cluster.close();
-        console.log('closing2...')
-        console.log('got lotsa quote data!', JSON.stringify(finvizTickersWithData))
-        console.log('queueing finished...')
-
+        // console.log('got lots of quote data!', JSON.stringify(finvizTickersWithData))
         return Promise.resolve(finvizTickersWithData)
     })();
-
-
 }
 
 export function getFinvizIncomeDataForTickers(page, tickers) {
@@ -113,7 +102,6 @@ export function getFinvizIncomeDataForTickers(page, tickers) {
 
                         if (index > i && index < (i + numberOfColumns))
                             return el
-
                     })
                 }
             }
@@ -126,13 +114,6 @@ export function getFinvizIncomeDataForTickers(page, tickers) {
 
             }, {})
 
-            console.log('pushing object: ', {
-                symbol: tickers[currentTickerIndex],
-                income_statements: {
-                    quarterly: niceKeysIncomeDataObj
-                }
-            })
-
             finvizTickersWithData.push({
                 symbol: tickers[currentTickerIndex],
                 income_statements: {
@@ -142,14 +123,8 @@ export function getFinvizIncomeDataForTickers(page, tickers) {
 
             currentTickerIndex += 1;
 
-            console.log('index now: ', currentTickerIndex)
-
-            if (currentTickerIndex === tickers.length) {
-
-                console.log('returning finviz income data: ', finvizTickersWithData)
-
+            if (currentTickerIndex === tickers.length)
                 resolve(finvizTickersWithData)
-            }
         }
     })
 
@@ -166,20 +141,11 @@ async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
 
         try {
 
-            const selector = '.statements-table'
-
-            console.log('waiting for statements table...')
-
-            // await page.waitForSelector(selector, { timeout: 2000 });
-
             await page.waitForSelector('a.tab-link', {
                 waitForSelector: true,
                 timeout: 1000
             });
 
-            console.log('found an a!')
-
-            console.log('evaluating a tags...')
             const aTagElements = await page.evaluate(() => {
                 return Array.from(document.querySelectorAll<HTMLElement>('a.tab-link'))
                     .map(async (cell) => {
@@ -191,16 +157,6 @@ async function scrapeDataForSingleTicker(page, ticker): Promise<string[]> {
                         }
                     })
             })
-
-            // try {
-
-            //     await page.waitForNavigation({
-            //         waitUntil: 'networkidle0',
-            //         timeout: 70
-            //     });
-            // }
-
-            // finally {
 
             await page.waitForSelector('.statements-table')
 

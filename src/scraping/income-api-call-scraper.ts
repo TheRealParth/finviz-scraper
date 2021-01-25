@@ -36,20 +36,22 @@ export async function getTickerListWithIncomeDataApiCalls(tickersWithQuoteData) 
 
 function makeObjectKeysNice(arrayOfObjects) {
 
-    return arrayOfObjects.map(obj => {
+    console.log('resulting data stuff: ', arrayOfObjects)
 
-        return {
-            currency: obj.currency,
-            data: Object.entries(obj.data).reduce((finalObj, [key, val]) => {
-            
-                console.log('old key: ', key)
-                const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
-                console.log('new key: ', validKey)
-                finalObj[validKey] = val
-                return finalObj
-            }, {})
-        }
 
-    })
+    return arrayOfObjects
+        .filter(obj => !arrayOfObjects.error)
+        .filter(obj => obj.data !== undefined)
+        .map(obj => {
+            console.log('letting obj through no error: ', obj.error)
+            return {
+                currency: obj.currency,
+                data: Object.entries(obj.data).reduce((finalObj, [key, val]) => {
+                    const validKey = key.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_')
+                    finalObj[validKey] = val
+                    return finalObj
+                }, {})
+            }
 
+        })
 }

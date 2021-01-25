@@ -30,7 +30,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 export function insert(documentToSave) {
 
-    console.log('saving a doc! ', JSON.stringify(documentToSave))
+    // console.log('saving a doc! ', JSON.stringify(documentToSave))
 
     return new Promise(resolve => {
 

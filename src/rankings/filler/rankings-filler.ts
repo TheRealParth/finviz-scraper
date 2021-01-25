@@ -39,67 +39,89 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
 
     tickerDataWithGrowthCalcs.forEach(stockObj => {
 
-        const revenue_quarterly_1y_PGdP = stockObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD']
-        const gross_profit_quarterly_1y_PGdP = stockObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD']
-        const net_profit_quarterly_1y_PGdP = stockObj.growth_calculations.net_profit['t+1y/t_quarterly_PGpD']
+        let revenue_quarterly_1y_PGdP = stockObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD']
+        let gross_profit_quarterly_1y_PGdP = stockObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD']
+        let net_profit_quarterly_1y_PGdP = stockObj.growth_calculations.net_profit['t+1y/t_quarterly_PGpD']
 
         console.log('filling rankings for ', stockObj.symbol, ' ', revenue_quarterly_1y_PGdP, ', ', gross_profit_quarterly_1y_PGdP, ', ', net_profit_quarterly_1y_PGdP, ', ')
 
         // revenue
-        if (revenue_quarterly_1y_PGdP) {
-            if (revenue_quarterly_1y_PGdP > rankingsMaxMinsHolder.revenue.max)
+        if (revenue_quarterly_1y_PGdP &&
+            !isNaN(revenue_quarterly_1y_PGdP) &&
+            revenue_quarterly_1y_PGdP !== Infinity &&
+            revenue_quarterly_1y_PGdP !== -Infinity) {
+
+            if (revenue_quarterly_1y_PGdP === "-0.00")
+                revenue_quarterly_1y_PGdP = 0
+
+            if (+revenue_quarterly_1y_PGdP > +rankingsMaxMinsHolder.revenue.max)
                 rankingsMaxMinsHolder.revenue.max = revenue_quarterly_1y_PGdP
 
             console.log('comparing 2: ', +revenue_quarterly_1y_PGdP, ' and ', +rankingsMaxMinsHolder.revenue.min)
-            console.log('comparing 2: ', +revenue_quarterly_1y_PGdP < +rankingsMaxMinsHolder.revenue.min)
-            
-            if (revenue_quarterly_1y_PGdP < rankingsMaxMinsHolder.revenue.min)
-            rankingsMaxMinsHolder.revenue.min = revenue_quarterly_1y_PGdP
-            
-            if (rankingsMaxMinsHolder.revenue.max > MAXIMUM_REVENUE_RATIO)
-            rankingsMaxMinsHolder.revenue.max = MAXIMUM_REVENUE_RATIO
-            
-            if (rankingsMaxMinsHolder.revenue.min < MINIMUM_REVENUE_RATIO)
-            rankingsMaxMinsHolder.revenue.min = MINIMUM_REVENUE_RATIO
+            console.log('comparing 2: ', Number(revenue_quarterly_1y_PGdP) < Number(rankingsMaxMinsHolder.revenue.min))
+
+            if (Number(revenue_quarterly_1y_PGdP) < Number(rankingsMaxMinsHolder.revenue.min))
+                rankingsMaxMinsHolder.revenue.min = revenue_quarterly_1y_PGdP
+
+            if (+rankingsMaxMinsHolder.revenue.max > +MAXIMUM_REVENUE_RATIO)
+                rankingsMaxMinsHolder.revenue.max = MAXIMUM_REVENUE_RATIO
+
+            if (+rankingsMaxMinsHolder.revenue.min < +MINIMUM_REVENUE_RATIO)
+                rankingsMaxMinsHolder.revenue.min = MINIMUM_REVENUE_RATIO
 
             console.log('min now: ', rankingsMaxMinsHolder.revenue.min)
         }
 
         // gross profit
-        if (gross_profit_quarterly_1y_PGdP) {
-            if (gross_profit_quarterly_1y_PGdP > rankingsMaxMinsHolder.gross_profit.max)
+        if (gross_profit_quarterly_1y_PGdP &&
+            !isNaN(gross_profit_quarterly_1y_PGdP) &&
+            gross_profit_quarterly_1y_PGdP !== Infinity &&
+            gross_profit_quarterly_1y_PGdP !== -Infinity) {
+
+            console.log('gross_profit_quarterly_1y_PGdP: ', gross_profit_quarterly_1y_PGdP)
+            if (gross_profit_quarterly_1y_PGdP === "-0.00") {
+                console.log('it\'s negative zero?')
+                gross_profit_quarterly_1y_PGdP = '0'
+            }
+
+            if (+gross_profit_quarterly_1y_PGdP > +rankingsMaxMinsHolder.gross_profit.max)
                 rankingsMaxMinsHolder.gross_profit.max = gross_profit_quarterly_1y_PGdP
 
-            if (gross_profit_quarterly_1y_PGdP < rankingsMaxMinsHolder.gross_profit.min)
+            if (+gross_profit_quarterly_1y_PGdP < +rankingsMaxMinsHolder.gross_profit.min)
                 rankingsMaxMinsHolder.gross_profit.min = gross_profit_quarterly_1y_PGdP
 
-            if (rankingsMaxMinsHolder.gross_profit.max > MAXIMUM_GROSS_PROFIT_RATIO)
+            if (+rankingsMaxMinsHolder.gross_profit.max > MAXIMUM_GROSS_PROFIT_RATIO)
                 rankingsMaxMinsHolder.gross_profit.max = MAXIMUM_GROSS_PROFIT_RATIO
 
-            if (rankingsMaxMinsHolder.gross_profit.min < MINIMUM_GROSS_PROFIT_RATIO)
+            if (+rankingsMaxMinsHolder.gross_profit.min < MINIMUM_GROSS_PROFIT_RATIO)
                 rankingsMaxMinsHolder.gross_profit.min = MINIMUM_GROSS_PROFIT_RATIO
         }
 
         // net_profit 
-        if (net_profit_quarterly_1y_PGdP) {
-            if (net_profit_quarterly_1y_PGdP > rankingsMaxMinsHolder.net_profit.max)
+        if (net_profit_quarterly_1y_PGdP &&
+            !isNaN(net_profit_quarterly_1y_PGdP) &&
+            net_profit_quarterly_1y_PGdP !== Infinity &&
+            net_profit_quarterly_1y_PGdP !== -Infinity) {
+
+            if (net_profit_quarterly_1y_PGdP === "-0.00")
+                net_profit_quarterly_1y_PGdP = 0
+
+            if (+net_profit_quarterly_1y_PGdP > +rankingsMaxMinsHolder.net_profit.max)
                 rankingsMaxMinsHolder.net_profit.max = net_profit_quarterly_1y_PGdP
 
-            if (net_profit_quarterly_1y_PGdP < rankingsMaxMinsHolder.net_profit.min)
+            if (+net_profit_quarterly_1y_PGdP < +rankingsMaxMinsHolder.net_profit.min)
                 rankingsMaxMinsHolder.net_profit.min = net_profit_quarterly_1y_PGdP
 
-            if (rankingsMaxMinsHolder.net_profit.max > MAXIMUM_NET_PROFIT_RATIO)
+            if (+rankingsMaxMinsHolder.net_profit.max > +MAXIMUM_NET_PROFIT_RATIO)
                 rankingsMaxMinsHolder.net_profit.max = MAXIMUM_NET_PROFIT_RATIO
 
-            if (rankingsMaxMinsHolder.net_profit.min < MINIMUM_NET_PROFIT_RATIO)
+            if (+rankingsMaxMinsHolder.net_profit.min < +MINIMUM_NET_PROFIT_RATIO)
                 rankingsMaxMinsHolder.net_profit.min = MINIMUM_NET_PROFIT_RATIO
         }
 
     });
 
-    console.log(`mins and maxes raw: `, rankingsMaxMinsHolder)
-
-    console.log(`mins and maxes with limits: `, rankingsMaxMinsHolder)
+    console.log(`mins and maxes: `, rankingsMaxMinsHolder)
 
     const rankedStatsArray = tickerDataWithGrowthCalcs
         .map(stockObj => {
@@ -114,7 +136,10 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
 
             console.log(`calculating rankings: `, revenue_quarterly_1y_PGdP)
 
-            if (revenue_quarterly_1y_PGdP) {
+            if (revenue_quarterly_1y_PGdP &&
+                !isNaN(revenue_quarterly_1y_PGdP) &&
+                revenue_quarterly_1y_PGdP !== Infinity &&
+                revenue_quarterly_1y_PGdP !== -Infinity) {
 
                 const revenueDistFromMin = revenue_quarterly_1y_PGdP - rankingsMaxMinsHolder.revenue.min
                 const revenueDistFromMax = rankingsMaxMinsHolder.revenue.max - revenue_quarterly_1y_PGdP
@@ -134,7 +159,10 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
                 console.log('caculating rev ranking: ', revenue_quarterly_1y_PGdP, 'h  max: ', rankingsMaxMinsHolder.revenue.max, 'min: ', rankingsMaxMinsHolder.revenue.min, ' ', stockObj.symbol, ' ', revenueDistFromMax, ' ', revenueDistFromMin)
             }
 
-            if (gross_profit_quarterly_1y_PGdP) {
+            if (gross_profit_quarterly_1y_PGdP &&
+                !isNaN(gross_profit_quarterly_1y_PGdP) &&
+                gross_profit_quarterly_1y_PGdP !== Infinity &&
+                gross_profit_quarterly_1y_PGdP !== -Infinity) {
                 const grossProfitDistFromMin = gross_profit_quarterly_1y_PGdP - rankingsMaxMinsHolder.gross_profit.min
                 const grossProfitDistFromMax = rankingsMaxMinsHolder.gross_profit.max - gross_profit_quarterly_1y_PGdP
 
@@ -152,7 +180,10 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
             }
 
 
-            if (net_profit_quarterly_1y_PGdP) {
+            if (net_profit_quarterly_1y_PGdP &&
+                !isNaN(net_profit_quarterly_1y_PGdP) &&
+                net_profit_quarterly_1y_PGdP !== Infinity &&
+                net_profit_quarterly_1y_PGdP !== -Infinity) {
                 const netProfitDistFromMin = net_profit_quarterly_1y_PGdP - rankingsMaxMinsHolder.net_profit.min
                 const netProfitDistFromMax = rankingsMaxMinsHolder.net_profit.max - net_profit_quarterly_1y_PGdP
 

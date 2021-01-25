@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 import { scrapeAllTickersWithCluster } from './scraping/scrape-all-tickers'
-import { getFinvizIncomeDataForTickers, getFinvizIncomeDataForTickersWithCluster } from './scraping/get-finviz-data-for-tickers'
 import { getTickerListWithIncomeDataApiCalls } from './scraping/income-api-call-scraper'
 import { calculateGrowthStatsForTickers } from './utils/calculate-growth-stats-for-tickers'
 import { getFinvizQuoteDataForTickersWithCluster } from './scraping/get-finviz-quote-data'
@@ -18,38 +17,39 @@ export const main = async () => {
   const page = await createPuppeteerStuff();
 
   await login(page);
-  
+
   const scrapedTickerList = await scrapeAllTickersWithCluster(page)
 
   console.log('tickers: ', scrapedTickerList)
-  
-  // const tickerListPageData = await getFinvizIncomeDataForTickers(page, scrapedTickerList.slice(20, 30))
-  // const tickerListPageData = await getFinvizIncomeDataForTickersWithCluster(page, scrapedTickerList)
-  // console.log('ticker list with page data: ', JSON.stringify(tickerListPageData))  
-  
-  
-  // nice!
 
-  const tickerListPageData = await getFinvizQuoteDataForTickersWithCluster(page, scrapedTickerList.slice(7, 10))
+  const tickerListPageData = await getFinvizQuoteDataForTickersWithCluster(page, scrapedTickerList)
   // console.log('ticker list with page data: ', JSON.stringify(tickerListPageData, null, 2))
 
   const tickerListWithIncomeData = await getTickerListWithIncomeDataApiCalls(tickerListPageData)
-  // console.log('ticker list with income data: ', JSON.stringify(tickerListWithIncomeData, null, 2))
-    
+  console.log('ticker list with income data: ', JSON.stringify(tickerListWithIncomeData, null, 2))
+
   const tickerListWithRegressionsRun = runRegressionsForTickers(tickerListWithIncomeData)
-  console.log('ticker list with regressions run: ', JSON.stringify(tickerListWithRegressionsRun, null, 2))
-  
+  // console.log('ticker list with regressions run: ', JSON.stringify(tickerListWithRegressionsRun, null, 2))
+
   const tickerListWithGrowthCalculations = calculateGrowthStatsForTickers(tickerListWithRegressionsRun)
-  console.log('ticker list with growth calcs: ', JSON.stringify(tickerListWithGrowthCalculations, null, 2))
+  // console.log('ticker list with growth calcs: ', JSON.stringify(tickerListWithGrowthCalculations, null, 2))
 
   const [rankedTickerList, rankingsMaxesAndMins] = calculateRankings(tickerListWithGrowthCalculations)
 
   const sortedRankedTickerList = sortByRankings(rankedTickerList)
 
+  const sortedRankedTickerListGoodOnes = sortedRankedTickerList.filter(tickerObj => {
+
+    if (tickerObj.growth_calculations.revenue['t+1y/t_difference'] > 0 &&
+      tickerObj.growth_calculations.gross_profit['t+1y/t_difference']  > 0 &&
+      tickerObj.growth_calculations.net_profit['t+1y/t_difference'] > 0)
+      return tickerObj
+  })
+
   await insert({
     date_scraped: new Date(),
     stock_list: sortedRankedTickerList,
-    stock_list_good_ones: sortedRankedTickerList,
+    stock_list_good_ones: sortedRankedTickerListGoodOnes,
     maxes_and_mins: rankingsMaxesAndMins
   })
 
@@ -57,6 +57,6 @@ export const main = async () => {
 }
 
 main().then(data => {
-  logger.info(`data for tickers: ${JSON.stringify(data, null, 2)}`)
+  logger.info(`bazzinga 🎉 ${JSON.stringify(data, null, 2)}`)
   process.exit(0)
 })
