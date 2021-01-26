@@ -14,7 +14,7 @@ export async function getFinvizQuoteDataForTickersWithCluster(page, tickers) {
 
         const cluster = await Cluster.launch({
             concurrency: Cluster.CONCURRENCY_CONTEXT,
-            maxConcurrency: 5,
+            maxConcurrency: +process.env.CLUSTER_MAX_CONCURRENCY,
         });
 
         await cluster.task(async ({ page, data: url }) => {
@@ -25,7 +25,7 @@ export async function getFinvizQuoteDataForTickersWithCluster(page, tickers) {
 
             try {
 
-                console.log('checking stock page at url: ', url)
+                // console.log('checking stock page at url: ', url)
 
                 await page.goto(url, { waitUntil: 'domcontentloaded' })
 
@@ -63,6 +63,8 @@ export async function getFinvizQuoteDataForTickersWithCluster(page, tickers) {
             }
             catch (err) {
                 console.log('dang son, an error happened getting quote data: ', err)
+
+                await page.screenshot('./err screentshot - ' + new Date())
             }
 
         })

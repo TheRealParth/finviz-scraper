@@ -23,7 +23,7 @@ export async function scrapeAllTickersWithCluster(page) {
 
         const cluster = await Cluster.launch({
             concurrency: Cluster.CONCURRENCY_CONTEXT,
-            maxConcurrency: 5,
+            maxConcurrency: +process.env.CLUSTER_MAX_CONCURRENCY,
         });
 
         await cluster.task(async ({ page, data: url }) => {

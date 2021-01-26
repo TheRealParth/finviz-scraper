@@ -7,15 +7,23 @@ const annualIncomeStatementsBaseUrl = 'https://elite.finviz.com/api/statement.as
 
 export async function getTickerListWithIncomeDataApiCalls(tickersWithQuoteData) {
 
-    const annualIncomeStatementApiCalls = tickersWithQuoteData.map(tickerObj => {
+    const annualIncomeStatementApiCalls = tickersWithQuoteData.map((tickerObj, index) => {
         const annualUrl = annualIncomeStatementsBaseUrl + tickerObj.symbol
-        return fetch(annualUrl).then(response => response.json())
+        return new Promise(resolve => setTimeout(resolve, 50 * index)).then(() => fetch(annualUrl)
+            .then(response => response.json())
+            .catch(err => {
+                console.log('uh oh, error calling for annual statements: ', err)
+            }));
     })
 
-    const quarterlyIncomeStatementApiCalls = tickersWithQuoteData.map(tickerObj => {
+    const quarterlyIncomeStatementApiCalls = tickersWithQuoteData.map((tickerObj, index) => {
         const quarterlyUrl = quarterlyIncomeStatementsBaseUrl + tickerObj.symbol
-        return fetch(quarterlyUrl)
+        return new Promise(resolve => setTimeout(resolve, 40 * index)).then(() => fetch(quarterlyUrl)
             .then(response => response.json())
+            .catch(err => {
+                console.log('uh oh, error calling for quarterly statements: ', err)
+            }));
+
     })
 
     const annualIncomeStatements = await Promise.all(annualIncomeStatementApiCalls)
@@ -36,14 +44,10 @@ export async function getTickerListWithIncomeDataApiCalls(tickersWithQuoteData) 
 
 function makeObjectKeysNice(arrayOfObjects) {
 
-    console.log('resulting data stuff: ', arrayOfObjects)
-
-
     return arrayOfObjects
         .filter(obj => !arrayOfObjects.error)
         .filter(obj => obj.data !== undefined)
         .map(obj => {
-            console.log('letting obj through no error: ', obj.error)
             return {
                 currency: obj.currency,
                 data: Object.entries(obj.data).reduce((finalObj, [key, val]) => {

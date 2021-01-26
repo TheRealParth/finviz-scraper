@@ -58,7 +58,7 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     const expR2 = (exponentialModelData as Result).r2
     const logR2 = (logarithmicModelData as Result).r2
 
-    console.log('linR2 ', linR2, ' expR2: ', expR2, ' logR2: ', logR2)
+    // console.log('linR2 ', linR2, ' expR2: ', expR2, ' logR2: ', logR2)
 
     const r2s = []
 
@@ -71,7 +71,7 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     if (logR2 && !isNaN(logR2))
         r2s.push(logR2)
 
-    console.log('max of ', linR2, expR2, logR2, ' is: ', Math.max(...r2s))
+    // console.log('max of ', linR2, expR2, logR2, ' is: ', Math.max(...r2s))
 
     let next_year_quarterly_revenue_prediction = null;
 
@@ -121,7 +121,7 @@ export function runRegressionsForTickers(tickerListPageData) {
     .filter( tickerObj => tickerObj.income_statements.quarterly !== undefined)
     .map(incomeDataForTicker => {
 
-        console.log('income data ticker: ', incomeDataForTicker)
+        // console.log('income data ticker: ', incomeDataForTicker)
 
         // console.log('rev data: ', incomeDataForTicker.income_statements.quarterly.data['total_revenue'])
         // console.log('gross prof data: ', incomeDataForTicker.income_statements.quarterly.data['gross_profit'])
