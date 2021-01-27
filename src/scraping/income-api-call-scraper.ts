@@ -4,7 +4,6 @@ const clonedeep = require('lodash.clonedeep')
 const quarterlyIncomeStatementsBaseUrl = 'https://elite.finviz.com/api/statement.ashx?s=IQ&t='
 const annualIncomeStatementsBaseUrl = 'https://elite.finviz.com/api/statement.ashx?t='
 
-
 export async function getTickerListWithIncomeDataApiCalls(tickersWithQuoteData) {
 
     const annualIncomeStatementApiCalls = tickersWithQuoteData.map((tickerObj, index) => {

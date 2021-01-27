@@ -20,7 +20,8 @@ export const main = async () => {
 
   const scrapedTickerList = await scrapeAllTickersWithCluster(page)
 
-  console.log('tickers: ', scrapedTickerList)
+  console.log(`found ${scrapedTickerList.length} tickers...`)
+  console.table(scrapedTickerList)
 
   // const tickerListPageData = await getFinvizQuoteDataForTickersWithCluster(page, scrapedTickerList)
   // // console.log('ticker list with page data: ', JSON.stringify(tickerListPageData, null, 2))

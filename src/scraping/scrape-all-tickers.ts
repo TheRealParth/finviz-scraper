@@ -11,12 +11,14 @@ export async function scrapeAllTickersWithCluster(page) {
         return pageNumberLinks[pageNumberLinks.length - 1].textContent
     })
 
-    console.log('number of pages: ', numberOfPages);
-    console.log('MAX_PAGES_TO_SCRAPE: ', process.env.MAX_PAGES_TO_SCRAPE);
-
     const cappedNumberOfPages = process.env.MAX_PAGES_TO_SCRAPE ? Math.min(+process.env.MAX_PAGES_TO_SCRAPE, numberOfPages) : numberOfPages;
 
+    console.log('number of pages: ', numberOfPages);
+    console.log('MAX_PAGES_TO_SCRAPE: ', process.env.MAX_PAGES_TO_SCRAPE);
     console.log('capped number of pages: ', cappedNumberOfPages);
+
+    const _console = console
+
 
     return await (async () => {
         const pageNumbers = (new Array(cappedNumberOfPages)).fill(0).map((_, indx) => indx + 1);
@@ -28,22 +30,58 @@ export async function scrapeAllTickersWithCluster(page) {
 
         await cluster.task(async ({ page, data: url }) => {
 
-            await page.goto(url, { waitUntil: 'domcontentloaded' })
+            
+            try {
+                _console.log('running task for: ', url)
+                await page.goto(url, { waitForSelector: 'a.screener-link-primary' })
 
-            const symbolsOnPage: string[] = await page.evaluate(() => {
-                const symbols = Array.from(document.querySelectorAll('.screener-link-primary'))
-                    .map(cell => cell.textContent)
+                const stringToLookFor = '?r='
+                const indexOfCharsBeforeNum = url.indexOf(stringToLookFor)
 
-                return symbols
-            })
+                _console.log('index: ', indexOfCharsBeforeNum)
+                _console.log('index: ', indexOfCharsBeforeNum + indexOfCharsBeforeNum.length)
 
-            symbols = [...symbols, ...symbolsOnPage]
+                const urlNum = url.substr(indexOfCharsBeforeNum + stringToLookFor.length) * 10
+
+
+                _console.log('sleeping for: ', urlNum)
+
+                await page.waitForTimeout(urlNum)
+
+                await page.screenshot({path: `img/${url.slice(url.length - 5)}.png`});
+                
+                // await page.goto(url)
+
+                // await page.waitForSelector(, {
+                //     waitForSelector: true,
+                //     timeout: 1000
+                // });
+
+
+                const symbolsOnPage: string[] = await page.evaluate(() => {
+                    const symbols = Array.from(document.querySelectorAll('a.screener-link-primary'))
+                        .map(cell => cell.textContent)
+
+                    console.log('found some symbols: ', symbols)
+                    return symbols
+                })
+
+                _console.log('returning the symbols: ', symbols)
+                symbols = [...symbols, ...symbolsOnPage]
+            }
+            catch (err) {
+                console.log('errr', err)
+            }
 
         });
+
+        console.log(`scraping ${pageNumbers.length} pages`)
 
         for (const pageNumber of pageNumbers) {
             const firstRowIndex = 1 + 20 * (pageNumber - 1)
             cluster.queue(`https://finviz.com/screener.ashx?r=${firstRowIndex}`);
+
+            console.log('queueing ', pageNumber, ' index: ', firstRowIndex)
         }
 
         await cluster.idle();
