@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-import { scrapeAllTickersWithCluster } from './scraping/scrape-all-tickers'
+import { scrapeAllTickersWithCluster } from './scraping/scrape-all-tickers-with-data'
 import { getTickerListWithIncomeDataApiCalls } from './scraping/income-api-call-scraper'
 import { calculateGrowthStatsForTickers } from './utils/calculate-growth-stats-for-tickers'
 import { getFinvizQuoteDataForTickersWithCluster } from './scraping/get-finviz-quote-data'

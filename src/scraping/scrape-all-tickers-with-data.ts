@@ -2,7 +2,9 @@ const { Cluster } = require('puppeteer-cluster');
 
 export async function scrapeAllTickersWithCluster(page) {
 
-    await page.goto(`https://finviz.com/screener.ashx`)
+    await page.goto(`https://elite.finviz.com/screener.ashx?v=151`)
+    // await page.goto(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70`,
+    //     { waitUntil: 'load' })
 
     let symbols = []
 
@@ -19,23 +21,38 @@ export async function scrapeAllTickersWithCluster(page) {
     console.log('capped number of pages: ', cappedNumberOfPages);
 
     const _console = console
-    
+
     return await (async () => {
         const pageNumbers = (new Array(cappedNumberOfPages)).fill(0).map((_, indx) => indx + 1);
-        
+
         console.log('Scraping tickers with cluster max concurrency set to: ', process.env.TICKER_SCRAPER_CLUSTER_MAX_CONCURRENCY)
         const cluster = await Cluster.launch({
             concurrency: Cluster.CONCURRENCY_CONTEXT,
             maxConcurrency: +process.env.TICKER_SCRAPER_CLUSTER_MAX_CONCURRENCY,
         });
 
-        
+
         await cluster.task(async ({ page, data: url }) => {
-            
+
             try {
                 _console.log('running task for: ', url)
-                await page.goto(url, { waitForSelector: 'a.screener-link-primary', timeout: 45000  })
+                await page.goto(url, { waitForSelector: 'tr.table-dark-row-cp', timeout: 45000 })
                 // await page.goto(url, { waitUntil: 'load', timeout: 10000 })
+
+                // const presentsDropdownSelector = 'select[id="screenerPresetsSelect"]';
+
+
+
+                // <style="width: 100%; visibility: visible;" class="body-combo-text" onchange="ScreenerPresetsChange(value,&quot;v=111&quot;)">
+                // <option>My Presets</option>
+                // <option value="__save_screen">-Save Screen</option>
+                // <option value="__edit_screens">-Edit Screens</option>
+                // <option value="v=152&amp;f=sec_healthcare">s: Fundamentals</option>
+                // </select>
+
+                // await page.type(emailInputSelector, process.env.FINVIZ_EMAIL)
+                // await page.type(pwInputSelector, process.env.FINVIZ_PW)
+                // await page.click(presentsDropdownSelector)
 
                 // const stringToLookFor = '?r='
                 // const indexOfCharsBeforeNum = url.indexOf(stringToLookFor)
@@ -43,10 +60,10 @@ export async function scrapeAllTickersWithCluster(page) {
                 // const urlNum = url.substr(indexOfCharsBeforeNum + stringToLookFor.length) * 10
 
                 // _console.log('sleeping for: ', urlNum)
-                
+
                 // await page.waitForTimeout(urlNum)
                 // await page.waitForTimeout(50)
-                
+
                 // _console.log('done sleepin...', urlNum)
 
                 // await page.screenshot({ path: `img/${url.slice(url.length - 5)}.png` });
@@ -58,19 +75,59 @@ export async function scrapeAllTickersWithCluster(page) {
                 //     timeout: 1000
                 // });
 
-                const symbolsOnPage: string[] = await page.evaluate(() => {
-                    const symbols = Array.from(document.querySelectorAll('a.screener-link-primary'))
+
+                // const loginBtnSelector = 'input[type="submit"]';
+
+                // await page.type(emailInputSelector, process.env.FINVIZ_EMAIL)
+                // await page.type(pwInputSelector, process.env.FINVIZ_PW)
+                // await page.click(loginBtnSelector)
+
+
+
+
+
+                const tableHeaderCells: string[] = await page.evaluate(() => {
+                    const headerCells = Array.from(document.querySelectorAll('tr[valign="middle"] td'))
                         .map(cell => cell.textContent)
 
-                    console.log('found some symbols: ', symbols)
-                    return symbols
+                    console.log('found some headerCells: ', headerCells)
+                    return headerCells
                 })
 
-                symbols = [...symbols, ...symbolsOnPage]
+                const symbolsData: string[] = await page.evaluate(() => {
+                    const symbolData = Array.from(document.querySelectorAll('tr.table-dark-row-cp td'))
+                        .map(cell => cell.textContent)
+
+                    console.log('found some symbolData: ', symbolData);
+                    return [symbolData]
+                })
+
+                console.log('symbols with data: ', symbolsData);
+
+                let currIndex = 0
+
+                const dataForPageSymbols = symbolsData.map(symbolData => {
+                    return tableHeaderCells.reduce((obj, key, index) => {
+                        obj[key] = symbolData[currIndex]
+
+                        currIndex++;
+                        return obj
+                    }, {})
+                })
+
+                // const dataForPageSymbols = symbolsData.map(symbolData => {
+                //     return tableHeaderCells.reduce((obj, key, index) => {
+                //         obj[key] = symbolData[index]
+                //         return obj
+                //     }, {})
+                // })
+
+
+                symbols = [...symbols, ...dataForPageSymbols]
             }
             catch (err) {
                 console.log('errr', err)
-                 await page.screenshot({ path: `img/${url.slice(url.length - 5)}.png` });
+                await page.screenshot({ path: `img/${url.slice(url.length - 5)}.png` });
             }
 
         });
@@ -79,7 +136,10 @@ export async function scrapeAllTickersWithCluster(page) {
 
         for (const pageNumber of pageNumbers) {
             const firstRowIndex = 1 + 20 * (pageNumber - 1)
-            cluster.queue(`https://finviz.com/screener.ashx?r=${firstRowIndex}`);
+            cluster.queue(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70&r=${firstRowIndex}`);
+
+            // await page.goto(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70`,
+            // { waitUntil: 'load' })
 
             console.log('queueing ', pageNumber, ' index: ', firstRowIndex)
         }
