@@ -2,7 +2,9 @@ const { Cluster } = require('puppeteer-cluster');
 
 export async function scrapeAllTickersWithCluster(page) {
 
-    await page.goto(`https://finviz.com/screener.ashx`)
+    console.log('wtf...')
+
+    await page.goto(`https://elite.finviz.com/screener.ashx`, { waitUntil: 'load', timeout: 5000 })
 
     let symbols = []
 
@@ -29,12 +31,11 @@ export async function scrapeAllTickersWithCluster(page) {
             maxConcurrency: +process.env.TICKER_SCRAPER_CLUSTER_MAX_CONCURRENCY,
         });
 
-        
         await cluster.task(async ({ page, data: url }) => {
             
             try {
                 _console.log('running task for: ', url)
-                await page.goto(url, { waitForSelector: 'a.screener-link-primary', timeout: 45000  })
+                await page.goto(url, { waitForSelector: 'a.screener-link-primary', timeout: 4000  })
                 // await page.goto(url, { waitUntil: 'load', timeout: 10000 })
 
                 // const stringToLookFor = '?r='
@@ -69,8 +70,10 @@ export async function scrapeAllTickersWithCluster(page) {
                 symbols = [...symbols, ...symbolsOnPage]
             }
             catch (err) {
-                console.log('errr', err)
+                console.log('errr2', err)
                  await page.screenshot({ path: `img/${url.slice(url.length - 5)}.png` });
+
+                console.log('errored so requeuing2: ', url)
             }
 
         });

@@ -9,8 +9,8 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     let chronologicalDataPoints = []
     let chronologicalPointsShiftedToZeroY = []
     let linearModelData: Result | {} = {}
-    let exponentialModelData: Result | {} = {}
-    let logarithmicModelData: Result | {} = {}
+    // let exponentialModelData: Result | {} = {}
+    // let logarithmicModelData: Result | {} = {}
 
     let numberOfColumns = 0
 
@@ -37,16 +37,16 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         // console.log('chronological points shifted up: ', chronologicalPointsShiftedToZeroY)
 
         const linearRegModel = regression.linear(chronologicalPointsShiftedToZeroY)
-        const exponentialRegModel = regression.exponential(chronologicalPointsShiftedToZeroY)
-        const logarithmicReg = regression.logarithmic(chronologicalPointsShiftedToZeroY)
+        // const exponentialRegModel = regression.exponential(chronologicalPointsShiftedToZeroY)
+        // const logarithmicReg = regression.logarithmic(chronologicalPointsShiftedToZeroY)
 
         // console.log('lin: ', JSON.stringify(linearRegModel, null, 2))
         // console.log('exp: ', JSON.stringify(exponentialRegModel, null, 2))
         // console.log('log: ', JSON.stringify(logarithmicReg, null, 2))
 
         linearModelData = linearRegModel
-        exponentialModelData = exponentialRegModel
-        logarithmicModelData = logarithmicReg
+        // exponentialModelData = exponentialRegModel
+        // logarithmicModelData = logarithmicReg
 
         numberOfColumns = chronologicalPointsShiftedToZeroY.length
     }
@@ -55,8 +55,8 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     let regression_best_fit_line_equation = ''
 
     const linR2 = (linearModelData as Result).r2
-    const expR2 = (exponentialModelData as Result).r2
-    const logR2 = (logarithmicModelData as Result).r2
+    // const expR2 = (exponentialModelData as Result).r2
+    // const logR2 = (logarithmicModelData as Result).r2
 
     // console.log('linR2 ', linR2, ' expR2: ', expR2, ' logR2: ', logR2)
 
@@ -65,11 +65,11 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     if (linR2 && !isNaN(linR2))
         r2s.push(linR2)
 
-    if (expR2 && !isNaN(expR2))
-        r2s.push(expR2)
+    // if (expR2 && !isNaN(expR2))
+    //     r2s.push(expR2)
 
-    if (logR2 && !isNaN(logR2))
-        r2s.push(logR2)
+    // if (logR2 && !isNaN(logR2))
+    //     r2s.push(logR2)
 
     // console.log('max of ', linR2, expR2, logR2, ' is: ', Math.max(...r2s))
 
@@ -81,32 +81,32 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         next_year_quarterly_revenue_prediction = (linearModelData as Result).predict(numberOfColumns + 4 - 1)[1]
     }
 
-    if (Math.max(...r2s) === expR2) {
-        regression_best_fit_line_type = 'EXPONENTIAL'
-        regression_best_fit_line_equation = (exponentialModelData as Result).string
-        next_year_quarterly_revenue_prediction = (exponentialModelData as Result).predict(numberOfColumns + 4 - 1)[1]
-    }
+    // if (Math.max(...r2s) === expR2) {
+    //     regression_best_fit_line_type = 'EXPONENTIAL'
+    //     regression_best_fit_line_equation = (exponentialModelData as Result).string
+    //     next_year_quarterly_revenue_prediction = (exponentialModelData as Result).predict(numberOfColumns + 4 - 1)[1]
+    // }
 
-    if (Math.max(...r2s) === logR2) {
-        regression_best_fit_line_type = 'LOGARITHMIC'
-        regression_best_fit_line_equation = (logarithmicModelData as Result).string
-        next_year_quarterly_revenue_prediction = (logarithmicModelData as Result).predict(numberOfColumns + 4 - 1)[1]
-    }
+    // if (Math.max(...r2s) === logR2) {
+    //     regression_best_fit_line_type = 'LOGARITHMIC'
+    //     regression_best_fit_line_equation = (logarithmicModelData as Result).string
+    //     next_year_quarterly_revenue_prediction = (logarithmicModelData as Result).predict(numberOfColumns + 4 - 1)[1]
+    // }
 
     let tPlusDifference = null
 
     if (next_year_quarterly_revenue_prediction && chronologicalPointsShiftedToZeroY)
         tPlusDifference = +(next_year_quarterly_revenue_prediction - (chronologicalPointsShiftedToZeroY[chronologicalPointsShiftedToZeroY.length - 1])[1]).toFixed(4)
-    
+
     delete (linearModelData as Result).predict
-    delete (exponentialModelData as Result).predict
-    delete (logarithmicModelData as Result).predict
+    // delete (exponentialModelData as Result).predict
+    // delete (logarithmicModelData as Result).predict
 
     return {
         regression_models: {
             linear: linearModelData,
-            exponential: exponentialModelData,
-            logarithmic: logarithmicModelData
+            // exponential: exponentialModelData,
+            // logarithmic: logarithmicModelData
         },
         regression_best_fit_line_type,
         regression_best_fit_line_equation,
@@ -118,22 +118,25 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
 export function runRegressionsForTickers(tickerListPageData) {
 
     return tickerListPageData
-    .filter( tickerObj => tickerObj.income_statements.quarterly !== undefined)
-    .map(incomeDataForTicker => {
+        .filter(tickerObj => tickerObj.income_statements.quarterly !== undefined)
+        .map(incomeDataForTicker => {
 
-        // console.log('income data ticker: ', incomeDataForTicker)
+            // console.log('income data ticker: ', incomeDataForTicker)
 
-        // console.log('rev data: ', incomeDataForTicker.income_statements.quarterly.data['total_revenue'])
-        // console.log('gross prof data: ', incomeDataForTicker.income_statements.quarterly.data['gross_profit'])
-        // console.log('net prof data: ', incomeDataForTicker.income_statements.quarterly.data['net_income'])
+            // console.log('rev data: ', incomeDataForTicker.income_statements.quarterly.data['total_revenue'])
+            // console.log('gross prof data: ', incomeDataForTicker.income_statements.quarterly.data['gross_profit'])
+            // console.log('net prof data: ', incomeDataForTicker.income_statements.quarterly.data['net_income'])
 
-        incomeDataForTicker.growth_calculations = {
-            revenue: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['total_revenue']),
-            gross_profit: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['gross_profit']),
-            net_profit: runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['net_income'])
-        }
+            incomeDataForTicker.growth_calculations = {
+                revenue: !incomeDataForTicker.income_statements.quarterly.data ? null :
+                    runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['total_revenue']),
+                gross_profit: !incomeDataForTicker.income_statements.quarterly.data ? null :
+                    runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['gross_profit']),
+                net_profit: !incomeDataForTicker.income_statements.quarterly.data ? null :
+                    runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['net_profit'])
+            }
 
-        return incomeDataForTicker
-    })
+            return incomeDataForTicker
+        })
 
 }

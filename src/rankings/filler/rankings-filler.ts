@@ -39,6 +39,13 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
 
     const filterdDataWithGrowthCalcs = tickerDataWithGrowthCalcs.filter(tickerObj => {
 
+        if (!tickerObj || !tickerObj.growth_calculations || 
+            !tickerObj.growth_calculations.revenue ||
+            !tickerObj.growth_calculations.gross_profit ||
+            !tickerObj.growth_calculations.net_profit
+            )
+            return false
+
         if (+tickerObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD'] !== Infinity &&
             +tickerObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD'] !== -Infinity &&
             +tickerObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD'] !== Infinity &&
@@ -106,10 +113,10 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
                 gross_profit_quarterly_1y_PGdP !== Infinity &&
                 gross_profit_quarterly_1y_PGdP !== -Infinity) {
 
-                if (gross_profit_quarterly_1y_PGdP === "-0.00") {
-                    console.log('it\'s negative zero?')
-                    gross_profit_quarterly_1y_PGdP = '0'
-                }
+                // if (gross_profit_quarterly_1y_PGdP === "-0.00") {
+                //     console.log('it\'s negative zero?')
+                //     gross_profit_quarterly_1y_PGdP = '0'
+                // }
 
                 if (+gross_profit_quarterly_1y_PGdP > +rankingsMaxMinsHolder.gross_profit.max)
                     rankingsMaxMinsHolder.gross_profit.max = gross_profit_quarterly_1y_PGdP
@@ -225,7 +232,7 @@ export function calculateRankings(tickerDataWithGrowthCalcs) {
                 // console.log('net p ranking: ', netProfitRanking)
 
                 if (!netProfitRanking || netProfitRanking < 0) {
-                    console.log('setting to zero...')
+                    // console.log('setting to zero...')
                     netProfitRanking = 0
                 }
 

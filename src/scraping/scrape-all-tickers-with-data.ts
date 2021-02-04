@@ -2,7 +2,7 @@ const { Cluster } = require('puppeteer-cluster');
 
 export async function scrapeAllTickersWithCluster(page) {
 
-    await page.goto(`https://elite.finviz.com/screener.ashx?v=151`)
+    await page.goto(`https://elite.finviz.com/screener.ashx?`, { waitUntil: 'load', timeout: 10000 })
     // await page.goto(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70`,
     //     { waitUntil: 'load' })
 
@@ -86,34 +86,63 @@ export async function scrapeAllTickersWithCluster(page) {
 
 
 
-                const tableHeaderCells: string[] = await page.evaluate(() => {
+                const tableHeaderCells: string[] = (await page.evaluate(() => {
                     const headerCells = Array.from(document.querySelectorAll('tr[valign="middle"] td'))
                         .map(cell => cell.textContent)
 
                     console.log('found some headerCells: ', headerCells)
                     return headerCells
-                })
+                }))
+                    .map(headerCell => headerCell.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_'))
 
-                const symbolsData: string[] = await page.evaluate(() => {
+                console.log('symbols header cells: ', tableHeaderCells.length);
+
+                const darkSymbolsData: string[] = await page.evaluate(() => {
                     const symbolData = Array.from(document.querySelectorAll('tr.table-dark-row-cp td'))
                         .map(cell => cell.textContent)
 
                     console.log('found some symbolData: ', symbolData);
-                    return [symbolData]
+                    return symbolData
+                })
+                const lightSymbolsData: string[] = await page.evaluate(() => {
+                    const symbolData = Array.from(document.querySelectorAll('tr.table-light-row-cp td'))
+                        .map(cell => cell.textContent)
+
+                    console.log('found some symbolData: ', symbolData);
+                    return symbolData
                 })
 
-                console.log('symbols with data: ', symbolsData);
+                const symbolsData = [...darkSymbolsData, ...lightSymbolsData]
 
-                let currIndex = 0
+                console.log('symbols length: ', symbolsData.length);
+                // console.log('symbols with data: ', symbolsData);
 
-                const dataForPageSymbols = symbolsData.map(symbolData => {
-                    return tableHeaderCells.reduce((obj, key, index) => {
-                        obj[key] = symbolData[currIndex]
+                const someSymbols = [];
+                let currentObj = {}
 
-                        currIndex++;
-                        return obj
-                    }, {})
+                symbolsData.map((symbolDataCellText, index) => {
+
+                    // if (index % tableHeaderCells.length === 0)
+
+                    if (index % tableHeaderCells.length === tableHeaderCells.length - 1) {
+                        someSymbols.push(currentObj);
+                        currentObj = {}
+                    }
+
+                    currentObj[tableHeaderCells[index % tableHeaderCells.length]] = symbolDataCellText
                 })
+
+                console.log('mapped symbols data: ', symbolsData.length);
+                // let currIndex = 0
+
+                // const dataForPageSymbols = symbolsData.map(symbolData => {
+                //     return tableHeaderCells.reduce((obj, key, index) => {
+                //         obj[key] = symbolData[currIndex]
+
+                //         currIndex++;
+                //         return obj
+                //     }, {})
+                // })
 
                 // const dataForPageSymbols = symbolsData.map(symbolData => {
                 //     return tableHeaderCells.reduce((obj, key, index) => {
@@ -123,11 +152,15 @@ export async function scrapeAllTickersWithCluster(page) {
                 // })
 
 
-                symbols = [...symbols, ...dataForPageSymbols]
+                symbols = [...symbols, ...someSymbols]
+                console.log('total symbols now: ', symbols.length);
+                // symbols = [...symbols, ...dataForPageSymbols]
             }
             catch (err) {
                 console.log('errr', err)
                 await page.screenshot({ path: `img/${url.slice(url.length - 5)}.png` });
+
+                console.log('errored so requeuing: ', url)
             }
 
         });
@@ -149,7 +182,7 @@ export async function scrapeAllTickersWithCluster(page) {
         await cluster.idle();
         await cluster.close();
 
-        console.log('scraped symbols: ', symbols)
+        // console.log('scraped symbols: ', symbols)
 
         return Promise.resolve(symbols)
     })();
