@@ -94,9 +94,10 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
     // }
 
     let tPlusDifference = null
+    let maxChronologicalYValue = null
 
     if (next_year_quarterly_revenue_prediction && chronologicalPointsShiftedToZeroY) {
-        const maxChronologicalYValue = chronologicalPointsShiftedToZeroY.reduce((max, [_xVal, yVal]) => {
+        maxChronologicalYValue = chronologicalPointsShiftedToZeroY.reduce((max, [_xVal, yVal]) => {
 
             if (yVal > max)
                 return yVal
@@ -119,7 +120,8 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
         regression_best_fit_line_type,
         regression_best_fit_line_equation,
         next_year_quarterly_revenue_prediction,
-        't+1y/t_difference': tPlusDifference
+        'max_y_0_to_t': maxChronologicalYValue,
+        't+1y/max_y_0_to_t': tPlusDifference
     }
 }
 
@@ -159,5 +161,5 @@ export function runRegressionsForTickers(tickerListPageData) {
 //                 ]
 //              } 
 //             }}
-             
+
 //              ).sort({_id: -1}).limit(1)

@@ -64,9 +64,9 @@ export const main = async () => {
 
   // Remove stocks that are shrinking in all three areas...
   const sortedRankedTickerListGoodOnes = sortedRankedTickerList.filter(tickerObj => {
-    if (tickerObj.growth_calculations.revenue['t+1y/t_difference'] > 0 &&
-      tickerObj.growth_calculations.gross_profit['t+1y/t_difference'] > 0 &&
-      tickerObj.growth_calculations.net_income['t+1y/t_difference'] > 0)
+    if (tickerObj.growth_calculations.revenue['t+1y/max_y_0_to_t'] > 0 &&
+      tickerObj.growth_calculations.gross_profit['t+1y/max_y_0_to_t'] > 0 &&
+      tickerObj.growth_calculations.net_income['t+1y/max_y_0_to_t'] > 0)
       return tickerObj
   })
 

@@ -28,9 +28,9 @@ export function calculateGrowthStatsForTickers(tickersWithQuoteAndGrowthCalcs) {
         tickerObj.growth_calculations.net_income
         ) {
 
-            tickerObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.revenue['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
-            tickerObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.gross_profit['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
-            tickerObj.growth_calculations.net_income['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.net_income['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
+            tickerObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.revenue['t+1y/max_y_0_to_t'] / marketCapMillionsNumber).toFixed(2)
+            tickerObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.gross_profit['t+1y/max_y_0_to_t'] / marketCapMillionsNumber).toFixed(2)
+            tickerObj.growth_calculations.net_income['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.net_income['t+1y/max_y_0_to_t'] / marketCapMillionsNumber).toFixed(2)
         }
         else
             tickerObj.growth_calculations = { revenue: null, gross_profit: null, net_income: null }
