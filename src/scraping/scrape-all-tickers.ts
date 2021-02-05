@@ -4,7 +4,7 @@ export async function scrapeAllTickersWithCluster(page) {
 
     console.log('wtf...')
 
-    await page.goto(`https://elite.finviz.com/screener.ashx`, { waitUntil: 'load', timeout: 5000 })
+    await page.goto(`https://elite.finviz.com/screener.ashx`, { timeout: 5000 })
 
     let symbols = []
 
@@ -33,6 +33,7 @@ export async function scrapeAllTickersWithCluster(page) {
 
         await cluster.task(async ({ page, data: url }) => {
             
+            _console.log('running???')
             try {
                 _console.log('running task for: ', url)
                 await page.goto(url, { waitForSelector: 'a.screener-link-primary', timeout: 4000  })
@@ -81,11 +82,13 @@ export async function scrapeAllTickersWithCluster(page) {
         console.log(`scraping ${pageNumbers.length} pages`)
 
         for (const pageNumber of pageNumbers) {
-            const firstRowIndex = 1 + 20 * (pageNumber - 1)
+            const firstRowIndex = 20 * (pageNumber - 1)
             cluster.queue(`https://finviz.com/screener.ashx?r=${firstRowIndex}`);
 
             console.log('queueing ', pageNumber, ' index: ', firstRowIndex)
         }
+
+
 
         console.log('idling...')
 

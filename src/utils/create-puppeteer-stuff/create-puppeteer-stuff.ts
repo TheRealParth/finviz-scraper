@@ -6,7 +6,7 @@ import { handleRequest } from '../handle-request/handle-request'
 export async function createPuppeteerStuff(): Promise<Page> {
 
   console.log('creating puppeteer stuff...')
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   console.log('1')
   const page = await browser.newPage()
   

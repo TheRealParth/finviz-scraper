@@ -2,7 +2,7 @@ const { Cluster } = require('puppeteer-cluster');
 
 export async function scrapeAllTickersWithCluster(page) {
 
-    await page.goto(`https://elite.finviz.com/screener.ashx?`, { waitUntil: 'load', timeout: 10000 })
+    await page.goto(`https://elite.finviz.com/screener.ashx?`, { waitUntil: 'load', timeout: 20000 })
     // await page.goto(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70`,
     //     { waitUntil: 'load' })
 
@@ -89,32 +89,23 @@ export async function scrapeAllTickersWithCluster(page) {
                 const tableHeaderCells: string[] = (await page.evaluate(() => {
                     const headerCells = Array.from(document.querySelectorAll('tr[valign="middle"] td'))
                         .map(cell => cell.textContent)
-
-                    console.log('found some headerCells: ', headerCells)
                     return headerCells
                 }))
                     .map(headerCell => headerCell.toLowerCase().replace(/[.]/g, '').replace(/[ ]/g, '_'))
 
-                console.log('symbols header cells: ', tableHeaderCells.length);
-
                 const darkSymbolsData: string[] = await page.evaluate(() => {
                     const symbolData = Array.from(document.querySelectorAll('tr.table-dark-row-cp td'))
                         .map(cell => cell.textContent)
-
-                    console.log('found some symbolData: ', symbolData);
                     return symbolData
                 })
                 const lightSymbolsData: string[] = await page.evaluate(() => {
                     const symbolData = Array.from(document.querySelectorAll('tr.table-light-row-cp td'))
                         .map(cell => cell.textContent)
-
-                    console.log('found some symbolData: ', symbolData);
                     return symbolData
                 })
 
                 const symbolsData = [...darkSymbolsData, ...lightSymbolsData]
 
-                console.log('symbols length: ', symbolsData.length);
                 // console.log('symbols with data: ', symbolsData);
 
                 const someSymbols = [];
@@ -132,29 +123,10 @@ export async function scrapeAllTickersWithCluster(page) {
                     currentObj[tableHeaderCells[index % tableHeaderCells.length]] = symbolDataCellText
                 })
 
-                console.log('mapped symbols data: ', symbolsData.length);
-                // let currIndex = 0
-
-                // const dataForPageSymbols = symbolsData.map(symbolData => {
-                //     return tableHeaderCells.reduce((obj, key, index) => {
-                //         obj[key] = symbolData[currIndex]
-
-                //         currIndex++;
-                //         return obj
-                //     }, {})
-                // })
-
-                // const dataForPageSymbols = symbolsData.map(symbolData => {
-                //     return tableHeaderCells.reduce((obj, key, index) => {
-                //         obj[key] = symbolData[index]
-                //         return obj
-                //     }, {})
-                // })
-
+                // console.log('mapped symbols data: ', symbolsData.length);
 
                 symbols = [...symbols, ...someSymbols]
                 console.log('total symbols now: ', symbols.length);
-                // symbols = [...symbols, ...dataForPageSymbols]
             }
             catch (err) {
                 console.log('errr', err)
@@ -170,9 +142,6 @@ export async function scrapeAllTickersWithCluster(page) {
         for (const pageNumber of pageNumbers) {
             const firstRowIndex = 1 + 20 * (pageNumber - 1)
             cluster.queue(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70&r=${firstRowIndex}`);
-
-            // await page.goto(`https://finviz.com/screener.ashx?v=152&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,59,60,61,62,63,64,65,66,67,68,69,70`,
-            // { waitUntil: 'load' })
 
             console.log('queueing ', pageNumber, ' index: ', firstRowIndex)
         }

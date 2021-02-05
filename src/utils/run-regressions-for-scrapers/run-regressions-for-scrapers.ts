@@ -95,8 +95,16 @@ export function runQuarterlyRegressionsForTicker(latestFirstDataPoints) {
 
     let tPlusDifference = null
 
-    if (next_year_quarterly_revenue_prediction && chronologicalPointsShiftedToZeroY)
-        tPlusDifference = +(next_year_quarterly_revenue_prediction - (chronologicalPointsShiftedToZeroY[chronologicalPointsShiftedToZeroY.length - 1])[1]).toFixed(4)
+    if (next_year_quarterly_revenue_prediction && chronologicalPointsShiftedToZeroY) {
+        const maxChronologicalYValue = chronologicalPointsShiftedToZeroY.reduce((max, [_xVal, yVal]) => {
+
+            if (yVal > max)
+                return yVal
+
+            return max
+        }, 0)
+        tPlusDifference = +(next_year_quarterly_revenue_prediction - maxChronologicalYValue).toFixed(4)
+    }
 
     delete (linearModelData as Result).predict
     // delete (exponentialModelData as Result).predict
@@ -132,11 +140,24 @@ export function runRegressionsForTickers(tickerListPageData) {
                     runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['total_revenue']),
                 gross_profit: !incomeDataForTicker.income_statements.quarterly.data ? null :
                     runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['gross_profit']),
-                net_profit: !incomeDataForTicker.income_statements.quarterly.data ? null :
-                    runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['net_profit'])
+                net_income: !incomeDataForTicker.income_statements.quarterly.data ? null :
+                    runQuarterlyRegressionsForTicker(incomeDataForTicker.income_statements.quarterly.data['net_income'])
             }
 
             return incomeDataForTicker
         })
 
 }
+
+
+
+// db.getCollection('eg_analyzed_results').find({}, { $filter: {"input" : "$stock_list",
+//              "as" : "stock",
+//              "cond" : {
+//                 "$and" : [
+//                    { "$gtr" : [ "$$stock.profit_m", "0" ] }
+//                 ]
+//              } 
+//             }}
+             
+//              ).sort({_id: -1}).limit(1)

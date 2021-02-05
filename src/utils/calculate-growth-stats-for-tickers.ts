@@ -21,19 +21,19 @@ export function calculateGrowthStatsForTickers(tickersWithQuoteAndGrowthCalcs) {
             marketCapMillionsNumber *= 1000
 
         console.log(`market cap number for ${tickerObj.ticker}: ${marketCapMillionsNumber}`)
-        console.log(`calcs: ${JSON.stringify(tickerObj.growth_calculations)}`)
+        // console.log(`calcs: ${JSON.stringify(tickerObj.growth_calculations)}`)
 
         if (tickerObj.growth_calculations.revenue &&
         tickerObj.growth_calculations.gross_profit &&
-        tickerObj.growth_calculations.net_profit
+        tickerObj.growth_calculations.net_income
         ) {
 
             tickerObj.growth_calculations.revenue['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.revenue['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
             tickerObj.growth_calculations.gross_profit['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.gross_profit['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
-            tickerObj.growth_calculations.net_profit['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.net_profit['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
+            tickerObj.growth_calculations.net_income['t+1y/t_quarterly_PGpD'] = (tickerObj.growth_calculations.net_income['t+1y/t_difference'] / marketCapMillionsNumber).toFixed(2)
         }
         else
-            tickerObj.growth_calculations = { revenue: null, gross_profit: null, net_profit: null }
+            tickerObj.growth_calculations = { revenue: null, gross_profit: null, net_income: null }
 
         return tickerObj
     })
