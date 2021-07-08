@@ -18,3 +18,8 @@ test/coverage.json
 temp/
 puppeteer-core-*.tgz
 new-docs/
+dist/
+logs/
+coverage/
+
+.env
